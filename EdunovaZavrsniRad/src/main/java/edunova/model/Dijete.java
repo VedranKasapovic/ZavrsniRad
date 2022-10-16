@@ -17,6 +17,9 @@ public class Dijete extends Osoba{
 	public void setDatumRodjenja(Date datumRodjenja) {
 		this.datumRodjenja = datumRodjenja;
 	}
+
+    
+  
 	
 	
 }

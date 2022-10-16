@@ -86,4 +86,18 @@ public class Posjeta extends Entitet {
         this.ormaric = ormaric;
     }
 
+    public Posjeta() {
+    }
+
+    public Posjeta(Boolean gratis, Boolean placeno, Boolean roditeljskaPratnja, Date vrijemeDolaska, Date vrijemeOdlaska, Integer ormaric, OdgovornaOsoba odgovornaOsoba) {
+        super();
+        this.gratis = gratis;
+        this.placeno = placeno;
+        this.roditeljskaPratnja = roditeljskaPratnja;
+        this.vrijemeDolaska = vrijemeDolaska;
+        this.vrijemeOdlaska = vrijemeOdlaska;
+        this.ormaric = ormaric;
+        this.odgovornaOsoba = odgovornaOsoba;
+    }
+
 }

@@ -7,9 +7,19 @@ import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class Entitet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer sifra;
+
+    public Entitet() {
+        super();
+    }
+
+    public Entitet(Integer sifra) {
+        super();
+        this.sifra = sifra;
+    }
 
     public Integer getSifra() {
         return sifra;

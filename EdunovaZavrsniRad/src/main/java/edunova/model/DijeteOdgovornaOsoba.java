@@ -10,13 +10,25 @@ import jakarta.persistence.ManyToOne;
  *
  * @author Veky
  */
-public class DijeteOdgovornaOsoba extends Entitet{
-    
+public class DijeteOdgovornaOsoba extends Entitet {
+
     @ManyToOne
     private Dijete dijete;
     @ManyToOne
     private OdgovornaOsoba odgovornaOsoba;
 
+    public DijeteOdgovornaOsoba() {
+        super();
+    }
+
+    public DijeteOdgovornaOsoba(Dijete dijete, OdgovornaOsoba odgovornaOsoba, Integer sifra) {
+        super(sifra);
+        this.dijete = dijete;
+        this.odgovornaOsoba = odgovornaOsoba;
+    }
+
+    
+    
     public Dijete getDijete() {
         return dijete;
     }
@@ -32,5 +44,7 @@ public class DijeteOdgovornaOsoba extends Entitet{
     public void setOdgovornaOsoba(OdgovornaOsoba odgovornaOsoba) {
         this.odgovornaOsoba = odgovornaOsoba;
     }
-    
+
+ 
+
 }

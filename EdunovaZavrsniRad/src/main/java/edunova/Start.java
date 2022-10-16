@@ -2,14 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
  */
-
 package edunova;
 
-import edunova.util.HibernateUtil;
-
-
-
-
+import edunova.controller.ObradaDijete;
+import edunova.model.Dijete;
+import edunova.util.EdunovaException;
 
 /**
  *
@@ -17,25 +14,23 @@ import edunova.util.HibernateUtil;
  */
 public class Start {
 
-    public Start() {
-//       PocetniInsert.izvedi();
-//        for(Dijete d: new ObradaDijete().read()){
-//            System.out.println(d.getIme());
-  /*      ObradaDijete od = new ObradaDijete();
+    public Start() throws EdunovaException {
+        /*PocetniInsert.izvedi();
+        for(Posjeta p: new ObradaPosjeta().read()){
+            System.out.println();
+        }*/
+        ObradaDijete od = new ObradaDijete();
         Dijete d = new Dijete();
-        //d.setIme("Prvi pomoću kontrolera");
+        d.setIme("prvi");
+        d.setPrezime("prezime");
+        
         od.setEntitet(d);
-        try {
-            od.create();
-        } catch (EdunovaException ex) {
-            System.out.println(ex.getPoruka());
-        }
+        od.create();
         System.out.println(od.getEntitet().getSifra());
-*/  HibernateUtil.getSession();
-    
+        
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws EdunovaException {
         new Start();
 
     }

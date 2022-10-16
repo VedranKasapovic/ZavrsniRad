@@ -3,8 +3,6 @@ package edunova.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
-
-
 @Entity
 public class OdgovornaOsoba extends Osoba {
 
@@ -44,6 +42,16 @@ public class OdgovornaOsoba extends Osoba {
 
     public void setTelefon(String telefon) {
         this.telefon = telefon;
+    }
+
+    public OdgovornaOsoba(String email, String rod, String telefon, Dijete dijete) {
+        this.email = email;
+        this.rod = rod;
+        this.telefon = telefon;
+        this.dijete = dijete;
+    }
+
+    public OdgovornaOsoba() {
     }
 
 }
