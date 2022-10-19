@@ -1,7 +1,8 @@
 package edunova.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
+import java.util.List;
 
 @Entity
 public class OdgovornaOsoba extends Osoba {
@@ -9,16 +10,18 @@ public class OdgovornaOsoba extends Osoba {
     private String email;
     private String rod;
     private String telefon;
-    @ManyToOne
-    private Dijete dijete;
+    @ManyToMany 
+    private List<Dijete> djeca;
 
-    public Dijete getDijete() {
-        return dijete;
+    public List<Dijete> getDjeca() {
+        return djeca;
     }
 
-    public void setDijete(Dijete dijete) {
-        this.dijete = dijete;
+    public void setDjeca(List<Dijete> djeca) {
+        this.djeca = djeca;
     }
+
+   
 
     public String getEmail() {
         return email;
@@ -44,11 +47,11 @@ public class OdgovornaOsoba extends Osoba {
         this.telefon = telefon;
     }
 
-    public OdgovornaOsoba(String email, String rod, String telefon, Dijete dijete) {
+    public OdgovornaOsoba(String email, String rod, String telefon, List<Dijete> djeca) {
         this.email = email;
         this.rod = rod;
         this.telefon = telefon;
-        this.dijete = dijete;
+        this.djeca = djeca;
     }
 
     public OdgovornaOsoba() {

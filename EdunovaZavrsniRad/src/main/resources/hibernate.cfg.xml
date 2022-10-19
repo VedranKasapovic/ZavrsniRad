@@ -39,10 +39,9 @@
 
 
         <!-- moraju se slijedno navesti klase koje su mapirane -->
-        <mapping class="edunova.model.OdgovornaOsoba" />
         <mapping class="edunova.model.Dijete" />
         <mapping class="edunova.model.Posjeta" />
-        <mapping class="edunova.model.DijeteOdgovornaOsoba" />
+        <mapping class="edunova.model.OdgovornaOsoba" />
         
        
     </session-factory>

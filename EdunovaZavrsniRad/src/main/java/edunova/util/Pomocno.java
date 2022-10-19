@@ -1,99 +1,85 @@
 package edunova.util;
 
 import java.util.Scanner;
+import edunova.model.Djelatnik;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import us.codecraft.xsoup.Xsoup;
 
+/**
+ *
+ * @author dell
+ */
 public class Pomocno {
-	
-	public static Scanner ulaz;
-	
-	/**
-	 * Metoda osigurava unos cjelog broja
-	 * koji može biti u cijelom rasponu
-	 * int tip podatka
-	 * @param poruka Koja se prikazuje korisniku
-	 * @return Učitani cjeli broj
-	 */
-	public static int ucitajInt(String poruka) {
-		while(true) {
-			System.out.print(poruka + ": ");
-			try {
-				return Integer.parseInt(ulaz.nextLine());
-			} catch (Exception e) {
-				System.out.println("Niste unijeli cijeli broj");
-			}
-		}
-	}
-	
-	public static int ucitajInt(String poruka, boolean pozitivni) {
-		int i = ucitajInt(poruka);
-		if(!pozitivni) {
-			return i;
-		}
-		while(true) {
-			if(i<0) {
-				System.out.println(
-						"Učitani broj mora biti pozitivan");
-				i=ucitajInt(poruka);
-				continue;
-			}
-			return i;
-		}
-	}
-	
-	public static int ucitajInt(String poruka, 
-			int min, int max) {
-		int i = ucitajInt(poruka);
-		while(true) {
-			if(i>=min && i<=max) {
-				return i;
-			}else {
-				System.out.println( 
-						"Broj mora biti između " + 
-				min + " " + max);
-				i=ucitajInt(poruka);
-			}
-		}
-	}
-	
-	public static String ucitajString(String poruka) {
-		String s;
-		while(true) {
-			System.out.print(poruka + ": ");
-			s = ulaz.nextLine();
-			if(s.trim().isEmpty()) {
-				System.out.println( 
-						"Obavezan unos");
-				continue;
-			}
-			return s;
-		}
-	}
-	
-	public static String ucitajString(String poruka,
-			boolean prazno) {
-		String s;
-		while(true) {
-			System.out.print(poruka + ": ");
-			s = ulaz.nextLine();
-			if(!prazno && s.trim().isEmpty()) {
-				System.out.println( 
-						"Obavezan unos");
-				continue;
-			}
-			return s;
-		}
-	}
-	
-	
-	
-	/**
-	 * https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
-	 * @param min
-	 * @param max
-	 * @return
-	 */
-	public static int slucajniBroj(int min, int max) {
-		return min + (int)(Math.random() * ((max - min) + 1));
-	}
+
+    public static final String FORMAT_DATUMA = "dd.MM.yyyy";
+    public static final String NAZIV_APLIKACIJE = "EDUNOVA APP";
+    public static Djelatnik djelatnik;
+
+    public static boolean kontrolaOib(String oib) {
+        if (oib == null) {
+            return false;
+        }
+        if (oib.length() != 11) {
+            return false;
+        }
+
+        char[] chars = oib.toCharArray();
+
+        int a = 10;
+        int asciiDigitsOffset = '0';
+        for (int i = 0; i < 10; i++) {
+            char c = chars[i];
+            if (c < '0' || c > '9') {
+                return false;
+            }
+            a = a + (c - asciiDigitsOffset);
+            a = a % 10;
+            if (a == 0) {
+                a = 10;
+            }
+            a *= 2;
+            a = a % 11;
+        }
+        int kontrolni = 11 - a;
+        kontrolni = kontrolni % 10;
+
+        return kontrolni == (chars[10] - asciiDigitsOffset);
+    }
+
+    public static String getPrimjerDatuma() {
+        SimpleDateFormat df = new SimpleDateFormat(FORMAT_DATUMA);
+        return df.format(new Date());
+    }
+
+    public static String dovuciOib() {
+
+        try {
+            //https://stackoverflow.com/questions/8616781/how-to-get-a-web-pages-source-code-from-java
+            URL url = new URL("http://oib.itcentrala.com/oib-generator/");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            url.openStream()));
+            String inputLine;
+            StringBuilder sb = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                sb.append(inputLine);
+            }
+            in.close();
+            
+             Document d = Jsoup.parse(sb.toString());
+            return Xsoup.compile("/html/body/div[1]/div[1]/text()").evaluate(d).get();
+            
+            //System.out.println(sb.toString());
+        } catch (Exception e) {
+        }
+
+        return "";
+    }
 
 }

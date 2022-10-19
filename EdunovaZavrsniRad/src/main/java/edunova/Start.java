@@ -7,6 +7,10 @@ package edunova;
 import edunova.controller.ObradaDijete;
 import edunova.model.Dijete;
 import edunova.util.EdunovaException;
+import edunova.util.PocetniInsert;
+import edunova.view.SplashScreen;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,8 +18,13 @@ import edunova.util.EdunovaException;
  */
 public class Start {
 
-    public Start() throws EdunovaException {
-        /*PocetniInsert.izvedi();
+    public Start() {
+        new SplashScreen().setVisible(true);
+      
+    }
+
+    private void testiranje(){
+          /*PocetniInsert.izvedi();
         for(Posjeta p: new ObradaPosjeta().read()){
             System.out.println();
         }*/
@@ -23,15 +32,19 @@ public class Start {
         Dijete d = new Dijete();
         d.setIme("prvi");
         d.setPrezime("prezime");
-        
+
         od.setEntitet(d);
-        od.create();
+        try {
+            od.create();
+        } catch (EdunovaException ex) {
+            System.out.println(ex.getPoruka());
+        }
         System.out.println(od.getEntitet().getSifra());
-        
+
     }
-
-    public static void main(String[] args) throws EdunovaException {
+    
+    public static void main(String[] args) {
         new Start();
-
+PocetniInsert.izvedi();
     }
 }
