@@ -1,6 +1,10 @@
 edunova\util\HibernateUtil.class
 edunova\util\Pomocno.class
+edunova\model\Djelatnik.class
+edunova\controller\ObradaOsoba.class
 edunova\model\Dijete.class
+edunova\view\SplashScreen.class
+edunova\controller\ObradaDjelatnik.class
 edunova\util\EdunovaException.class
 edunova\Start.class
 edunova\model\Osoba.class
@@ -8,5 +12,9 @@ edunova\model\OdgovornaOsoba.class
 edunova\util\PocetniInsert.class
 edunova\model\Entitet.class
 edunova\controller\Obrada.class
-edunova\model\DijeteOdgovornaOsoba.class
+edunova\controller\ObradaOdgovornaOsoba.class
 edunova\model\Posjeta.class
+edunova\view\Login.class
+edunova\view\SplashScreen$Ucitanje.class
+edunova\controller\ObradaDijete.class
+edunova\controller\ObradaPosjeta.class

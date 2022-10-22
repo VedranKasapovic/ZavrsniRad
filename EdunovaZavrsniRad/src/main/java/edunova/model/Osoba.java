@@ -5,8 +5,8 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class Osoba extends Entitet {
 
-    private String ime;
-    private String prezime;
+    public String ime;
+    public String prezime;
 
     public Osoba() {
         super();
@@ -37,7 +37,7 @@ public abstract class Osoba extends Entitet {
 
     @Override
     public String toString() {
-        return this.ime + " " + this.prezime;
+        return ime +" "+ prezime;
     }
 
 }

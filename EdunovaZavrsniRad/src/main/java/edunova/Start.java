@@ -6,6 +6,8 @@ package edunova;
 
 import edunova.controller.ObradaDijete;
 import edunova.model.Dijete;
+import edunova.model.Entitet;
+import edunova.model.Posjeta;
 import edunova.util.EdunovaException;
 import edunova.util.PocetniInsert;
 import edunova.view.SplashScreen;
@@ -40,11 +42,16 @@ public class Start {
             System.out.println(ex.getPoruka());
         }
         System.out.println(od.getEntitet().getSifra());
+        
+        Posjeta p = new Posjeta();
+        p.setRoditeljskaPratnja(Boolean.TRUE);
+        p.setGratis(Boolean.TRUE);
+        //p.setOdgovornaOsoba(1);
 
     }
     
     public static void main(String[] args) {
         new Start();
-PocetniInsert.izvedi();
+        new PocetniInsert();  
     }
 }

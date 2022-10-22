@@ -8,72 +8,59 @@ import com.github.javafaker.Faker;
 import edunova.model.Dijete;
 import edunova.model.Djelatnik;
 import edunova.model.OdgovornaOsoba;
+import edunova.model.Osoba;
+import edunova.model.Posjeta;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Session;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author Veky
  */
 public class PocetniInsert {
-    
+
     private List<Dijete> djeca;
+    private List<Djelatnik> djelatnici;
+    private List<OdgovornaOsoba> odgovorneOsobe;
+    private List<Posjeta> posjete;
+    private List<Osoba> osobe;
     private Session sess;
     private Faker faker;
-    
-    public PocetniInsert(){
+
+    public PocetniInsert() {
         djeca = new ArrayList<>();
-        sess.getTransaction().commit();
+        djelatnici = new ArrayList<>();
+        odgovorneOsobe = new ArrayList<>();
+        osobe = new ArrayList<>();
+
+        sess = HibernateUtil.getSession();
         faker = new Faker();
         sess.beginTransaction();
-        kreirajDjecu(50);
-        kreirajOdgovornuOsobu();
+        kreirajDjecu(10);
+        kreirajOdgovorneOsobe(20);
+        kreirajDjelatnika();
+        kreirajPosjete(2);
+        sess.getTransaction().commit();
+
     }
 
-//    public static void izvedi() {
-////        Session s = HibernateUtil.getSession();
-////        s.beginTransaction();
-////
-////        Faker f = new Faker();
-////        OdgovornaOsoba odgovornaOsoba;
-////        
-////        for (int i = 0; i < 10; i++) {
-////            odgovornaOsoba = new OdgovornaOsoba();
-////            odgovornaOsoba.setIme(f.address().firstName());
-////            odgovornaOsoba.setPrezime(f.address().lastName());
-////            
-////            s.persist(odgovornaOsoba);
-////            
-////        }
-////        Dijete d;
-////        for(int i=0; i<10;i++){
-////            d= new Dijete();
-////            d.setDatumRodjenja(f.date().birthday());
-////            d.setIme(f.address().firstName());
-////            d.setPrezime(f.address().lastName());
-////           
-////            s.persist(d);
-////        }
-////        s.getTransaction().commit();
-////        kreirajDjelatnika();
-//    }
-//
-//    private static void kreirajDjelatnika() {
-//        Djelatnik d = new Djelatnik();
-//        d.setIme("Marija");
-//        d.setPrezime("Marić");
-//        d.setLozinka("");
-//        sess.persist(d);
-//    }
+    private void kreirajDjelatnika() {
+        Djelatnik d = new Djelatnik();
+        d.setIme("Marija");
+        d.setPrezime("Marić");
+        d.setLozinka(BCrypt.hashpw("m", BCrypt.gensalt()));
+        sess.persist(d);
+
+    }
 
     private void kreirajDjecu(int broj) {
-        for (int i=0;i<broj;i++){
+        for (int i = 0; i < broj; i++) {
             djeca.add(kreirajDijete());
-            
+
         }
-        
-        
+
     }
 
     private Dijete kreirajDijete() {
@@ -81,24 +68,52 @@ public class PocetniInsert {
         d.setIme(faker.address().firstName());
         d.setPrezime(faker.address().lastName());
         d.setDatumRodjenja(faker.date().birthday(3, 13));
+
         sess.persist(d);
         return d;
     }
 
-    private void kreirajOdgovornuOsobu(int broj) {
-        for (int i=0;i<broj;i++){
-           odgovorneOsobe.add(kreirajOdgovorneOsobe());        
-        }
-}
+    private void kreirajOdgovorneOsobe(int broj) {
+        for (int i = 0; i < broj; i++) {
+            odgovorneOsobe.add(kreirajOdgovornuOsobu());
 
-    private void kreirajOdgovorneOsobe() {
+        }
+    }
+
+    private OdgovornaOsoba kreirajOdgovornuOsobu() {
         OdgovornaOsoba os = new OdgovornaOsoba();
         os.setIme(faker.address().firstName());
         os.setPrezime(faker.address().lastName());
         os.setEmail(faker.internet().emailAddress());
-        os.setTelefon(faker.phoneNumber().cellPhone().toString());
+        os.setDijete(djeca.get(1));
         sess.persist(os);
         return os;
     }
+
+    private void kreirajPosjete(int broj) {
+        for (int i = 0; i < broj; i++) {
+            kreirajPosjetu(broj);
+
+        }
+    }
+
+    private void kreirajPosjetu(int i) {
+        Posjeta p = new Posjeta();
+        if (i % 2 == 1) {
+            p.setOdgovornaOsoba(odgovorneOsobe.get(i - 1));
+        } else {
+            p.setOdgovornaOsoba(odgovorneOsobe.get(i));
+        }
+        
+            
+            
+            
+       
+        
+        
+
+        sess.persist(p);
+
+    }
+
 }
-    
