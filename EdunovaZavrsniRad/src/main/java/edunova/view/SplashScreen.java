@@ -4,7 +4,9 @@
  */
 package edunova.view;
 
+import edunova.controller.ObradaDjelatnik;
 import edunova.util.HibernateUtil;
+import edunova.util.PocetniInsert;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
 
@@ -33,7 +35,10 @@ public class SplashScreen extends javax.swing.JFrame {
         @Override
         public void run() {
             Session s = HibernateUtil.getSession();
-            if(s.getMetamodel().getEntities().isEmpty()){
+            if(!s.getMetamodel().getEntities().isEmpty()){
+                if(new ObradaDjelatnik().read().isEmpty()){
+                    new PocetniInsert();
+                }
                 new Login().setVisible(true);
                 dispose();
             }else{
