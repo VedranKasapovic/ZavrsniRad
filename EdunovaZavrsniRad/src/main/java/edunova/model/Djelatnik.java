@@ -15,7 +15,16 @@ public class Djelatnik extends Osoba{
     
     
     private String lozinka;
+    private Boolean aktivan;
 
+    public Boolean isAktivan() {
+        return aktivan;
+    }
+
+    public void setAktivan(Boolean aktivan) {
+        this.aktivan = aktivan;
+    }
+    
     public String getLozinka() {
         return lozinka;
     }

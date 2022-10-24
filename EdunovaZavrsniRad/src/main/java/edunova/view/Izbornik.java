@@ -5,6 +5,7 @@
 package edunova.view;
 
 import edunova.util.Pomocno;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,6 +33,11 @@ public class Izbornik extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jmnDjelatnik = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -42,11 +48,51 @@ public class Izbornik extends javax.swing.JFrame {
         jmnDjelatnik.setText("Djelatnik");
         jMenu1.add(jmnDjelatnik);
 
+        jMenuItem5.setText("Posjeta");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem3.setText("Djeca");
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem4.setText("Odgovorne osobe");
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem2.setText("Odjava");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem6.setText("Kraj programa");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Pomoć");
+        jMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu2ActionPerformed(evt);
+            }
+        });
 
         jMenuItem1.setText("O aplikaciji");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
@@ -68,13 +114,37 @@ public class Izbornik extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       JOptionPane.showMessageDialog(rootPane, Pomocno.NAZIV_APLIKACIJE 
+               + "\nAutor: Vedran Kasapović", "O aplikaciji", JOptionPane.OK_OPTION);
+        
+            }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        dispose();
+        new Login().setVisible(true);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu2ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+          new ProzorDjelatnik().setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
     private void postavke() {
         setTitle(Pomocno.NAZIV_APLIKACIJE + " " + Pomocno.djelatnik.getIme() + " " + Pomocno.djelatnik.getPrezime());
-     /*   if (!Pomocno.djelatnik.getSifra().equals(0)) {
+        if (!Pomocno.djelatnik.getSifra().equals(1)) {
             jmnDjelatnik.setVisible(false);
         }else {
             jmnDjelatnik.setVisible(true);
-        }*/
+        }
+    
     }
 
 
@@ -83,6 +153,11 @@ public class Izbornik extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jmnDjelatnik;
     // End of variables declaration//GEN-END:variables
 }

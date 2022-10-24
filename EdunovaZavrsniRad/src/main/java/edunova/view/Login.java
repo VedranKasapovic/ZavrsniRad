@@ -182,7 +182,8 @@ public class Login extends javax.swing.JFrame {
 
     private void autorizacija() {
         ObradaDjelatnik od = new ObradaDjelatnik();
-        Djelatnik d = od.autoriziraj(cmbDjelatnik.getSelectedItem().toString(), txtLozinka.getPassword());
+        Djelatnik odabrani = (Djelatnik) cmbDjelatnik.getSelectedItem();
+        Djelatnik d = od.autoriziraj(odabrani.getSifra(), txtLozinka.getPassword());
         if (d == null) {
             JOptionPane.showMessageDialog(rootPane, "Autorizacija nije uspjela");
             return ;

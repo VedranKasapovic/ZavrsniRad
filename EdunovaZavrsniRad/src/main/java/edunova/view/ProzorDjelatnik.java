@@ -10,12 +10,12 @@ import edunova.util.Pomocno;
  *
  * @author Veky
  */
-public class Djelatnik extends javax.swing.JFrame {
+public class ProzorDjelatnik extends javax.swing.JFrame {
 
     /**
      * Creates new form Djelatnik
      */
-    public Djelatnik() {
+    public ProzorDjelatnik() {
         initComponents();
         postavke();
     }

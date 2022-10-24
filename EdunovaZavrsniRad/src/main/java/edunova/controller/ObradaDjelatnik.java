@@ -8,6 +8,7 @@ import edunova.model.Djelatnik;
 import edunova.model.Osoba;
 import edunova.util.EdunovaException;
 import jakarta.persistence.NoResultException;
+import java.util.ArrayList;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.List;
 
@@ -17,15 +18,14 @@ import java.util.List;
  */
 public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
-    public Djelatnik autoriziraj(String djelatnik, char[] lozinka) {
+    public Djelatnik autoriziraj(Integer sifra, char[] lozinka) {
         Djelatnik d;
         try {
             //zadnji pokušaj prije predavanja
            d= session.createQuery("from Djelatnik d where "
-                    + " lower(concat(d.ime,' ', d.prezime)) like :djelatnik", 
+                    + " sifra=:sifra", 
                 Djelatnik.class)
-                .setParameter("djelatnik", "%" + djelatnik.toLowerCase() + "%")
-                    .setMaxResults(1)
+                .setParameter("sifra", sifra)
                     .getSingleResult();
 
 // baca grešku prazan entitet
@@ -41,6 +41,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
         if (BCrypt.checkpw(new String(lozinka), d.getLozinka())) {
             Djelatnik vrati = new Djelatnik();
+            vrati.setSifra(d.getSifra());
             vrati.setLozinka(d.getLozinka());
             vrati.setIme(d.getIme());
             vrati.setPrezime(d.getPrezime());
@@ -54,7 +55,20 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
     @Override
     public List<Djelatnik> read() {
-        return session.createQuery("from Djelatnik", Djelatnik.class).list();
+        List<Djelatnik> lista = new ArrayList<>();
+        List<Djelatnik> izBaze = session.createQuery("from Djelatnik", Djelatnik.class).list();
+        
+        Djelatnik d;
+        for(Djelatnik db : izBaze){
+            d=new Djelatnik();
+            d.setSifra(db.getSifra());
+            d.setLozinka(db.getLozinka());
+            d.setIme(db.getIme());
+            d.setPrezime(db.getPrezime());
+            lista.add(d);
+        }
+        
+        return lista;
     }
 
     @Override
