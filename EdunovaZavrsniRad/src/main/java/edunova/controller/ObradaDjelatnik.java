@@ -17,14 +17,22 @@ import java.util.List;
  */
 public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
-    public Djelatnik autoriziraj(String Djelatnik, char[] lozinka) {
+    public Djelatnik autoriziraj(String uvjet, char[] lozinka) {
         Djelatnik d;
         try {
-            
-            d = session.createQuery("from Djelatnik d where d.ime=:ime", Djelatnik.class)
-                    .setParameter("ime", entitet.getIme())
+            //zadnji pokušaj prije predavanja
+           d= session.createQuery("from Djelatnik d where "
+                    + " lower(concat(d.ime,' ', d.prezime)) like :uvjet", 
+                Djelatnik.class)
+                .setParameter("uvjet", "%" + uvjet.toLowerCase() + "%")
+                    .setMaxResults(10)
                     .getSingleResult();
 
+            // baca grešku prazan entitet
+            /*   d = session.createQuery("from Djelatnik d where d.getIme=:ime AND d.getPrezime=:prezime", Djelatnik.class)
+                    .setParameter("ime"' '"prezime", Djelatnik
+                    .getSingleResult();
+             */
 // treba popraviti. povlači samo za prvoga
 //           d = session.createQuery("from Djelatnik", Djelatnik.class).setMaxResults(1).getSingleResult();
         } catch (NoResultException e) {
@@ -64,5 +72,4 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    
 }
