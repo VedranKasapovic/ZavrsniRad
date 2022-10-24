@@ -17,13 +17,16 @@ import java.util.List;
  */
 public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
-    public Djelatnik autoriziraj(String ime, char[] lozinka) {
+    public Djelatnik autoriziraj(String Djelatnik, char[] lozinka) {
         Djelatnik d;
         try {
-            d = session.createQuery("from Djelatnik where ime=:ime",
-                    Djelatnik.class)
-                    .setParameter("ime", ime)
+            
+            d = session.createQuery("from Djelatnik d where d.ime=:ime", Djelatnik.class)
+                    .setParameter("ime", entitet.getIme())
                     .getSingleResult();
+
+// treba popraviti. povlači samo za prvoga
+//           d = session.createQuery("from Djelatnik", Djelatnik.class).setMaxResults(1).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
@@ -61,4 +64,5 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
 }

@@ -18,7 +18,7 @@ import us.codecraft.xsoup.Xsoup;
 public class Pomocno {
 
     public static final String FORMAT_DATUMA = "dd.MM.yyyy";
-    public static final String NAZIV_APLIKACIJE = "EDUNOVA APP";
+    public static final String NAZIV_APLIKACIJE = "Evidencija posjete";
     public static Djelatnik djelatnik;
 
     public static boolean kontrolaOib(String oib) {
