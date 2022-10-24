@@ -17,18 +17,18 @@ import java.util.List;
  */
 public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
-    public Djelatnik autoriziraj(String uvjet, char[] lozinka) {
+    public Djelatnik autoriziraj(String djelatnik, char[] lozinka) {
         Djelatnik d;
         try {
             //zadnji pokušaj prije predavanja
            d= session.createQuery("from Djelatnik d where "
-                    + " lower(concat(d.ime,' ', d.prezime)) like :uvjet", 
+                    + " lower(concat(d.ime,' ', d.prezime)) like :djelatnik", 
                 Djelatnik.class)
-                .setParameter("uvjet", "%" + uvjet.toLowerCase() + "%")
-                    .setMaxResults(10)
+                .setParameter("djelatnik", "%" + djelatnik.toLowerCase() + "%")
+                    .setMaxResults(1)
                     .getSingleResult();
 
-            // baca grešku prazan entitet
+// baca grešku prazan entitet
             /*   d = session.createQuery("from Djelatnik d where d.getIme=:ime AND d.getPrezime=:prezime", Djelatnik.class)
                     .setParameter("ime"' '"prezime", Djelatnik
                     .getSingleResult();
