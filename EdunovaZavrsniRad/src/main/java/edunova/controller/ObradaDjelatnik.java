@@ -67,7 +67,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
         return lista;
     }
-
+//komentar
     @Override
     public void update() throws EdunovaException {
         kontrolaUpdate();
