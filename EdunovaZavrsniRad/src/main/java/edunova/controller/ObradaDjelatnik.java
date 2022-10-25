@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
+    private List<Djelatnik> noviDjelatnici;
+
     public Djelatnik autoriziraj(Integer sifra, char[] lozinka) {
         Djelatnik d;
         try {
@@ -67,18 +69,62 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
     }
 
     @Override
+    public void update() throws EdunovaException {
+        kontrolaUpdate();
+        session.beginTransaction();
+        for (Djelatnik d : entitet.getDjelatnici()) {
+            session.remove(d);
+        }
+        for (Djelatnik d : noviDjelatnici) {
+            session.persist(d);
+        }
+        entitet.setDjelatnici(noviDjelatnici);
+        session.persist(entitet);
+        session.getTransaction().commit();
+        for (Djelatnik d : noviDjelatnici) {
+            session.refresh(d);
+        }
+    }
+
+    @Override
     protected String getNazivEntiteta() {
         return "Djelatnik";
     }
 
     @Override
+    protected void kontrolaCreate() throws EdunovaException {
+        kontrolaIme();
+        kontrolaPrezime();
+    }
+
+    @Override
     protected void kontrolaUpdate() throws EdunovaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        kontrolaCreate();
     }
 
     @Override
     protected void kontrolaDelete() throws EdunovaException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void kontrolaIme() throws EdunovaException {
+        kontrolaImeMoraBitiUneseno();
+    }
+
+    private void kontrolaImeMoraBitiUneseno() throws EdunovaException {
+        if (entitet.getIme() == null || entitet.getIme().trim().isEmpty()) {
+            throw new EdunovaException("Ime obavezno");
+        }
+    }
+
+    private void kontrolaPrezime() throws EdunovaException {
+        kontrolaPrezimeMoraBitiUneseno();
+    }
+
+    private void kontrolaPrezimeMoraBitiUneseno() throws EdunovaException {
+        if (entitet.getPrezime() == null || entitet.getPrezime().trim().isEmpty()) {
+            throw new EdunovaException("Prezime obavezno");
+        }
     }
 
 }

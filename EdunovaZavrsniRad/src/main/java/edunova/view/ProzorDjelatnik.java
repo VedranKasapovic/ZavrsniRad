@@ -9,6 +9,7 @@ import edunova.model.Djelatnik;
 import edunova.util.EdunovaException;
 import edunova.util.Pomocno;
 import javax.swing.JOptionPane;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -167,18 +168,18 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDodajActionPerformed
 
     private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
-        if(lstDjelatnici.getSelectedValue()==null || obrada.getEntitet()==null){
-            JOptionPane.showMessageDialog(rootPane, "Prvo odaberite djelatnika za promjenu");
+       if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(rootPane, "Prvo odaberite djelatnika");
             return;
         }
-        
+
         popuniModel();
+
         try {
             obrada.update();
             selectedIndex = lstDjelatnici.getSelectedIndex();
             ucitaj();
         } catch (EdunovaException ex) {
-            obrada.refresh();
             JOptionPane.showMessageDialog(rootPane, ex.getPoruka());
         }
     }//GEN-LAST:event_btnPromjeniActionPerformed
@@ -216,7 +217,7 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
         var e = obrada.getEntitet();
         txtIme.setText(e.getIme());
         txtPrezime.setText(e.getPrezime());
-        txtLozinka.setText(e.getLozinka());
+        txtLozinka.setText("");
         chkAktivan.setSelected(e.isAktivan());
 
     }
@@ -225,7 +226,7 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
         var e = obrada.getEntitet();
         e.setIme(txtIme.getText());
         e.setPrezime(txtPrezime.getText());
-        e.setLozinka(txtLozinka.getText());
+        e.setLozinka(BCrypt.hashpw(txtLozinka.getText(), BCrypt.gensalt()));
         e.setAktivan(chkAktivan.isSelected());
 
     }
