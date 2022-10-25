@@ -186,7 +186,7 @@ public class Login extends javax.swing.JFrame {
         Djelatnik d = od.autoriziraj(odabrani.getSifra(), txtLozinka.getPassword());
         if (d == null) {
             JOptionPane.showMessageDialog(rootPane, "Autorizacija nije uspjela");
-            return ;
+            return;
         }
         Pomocno.djelatnik = d;
         new Izbornik().setVisible(true);

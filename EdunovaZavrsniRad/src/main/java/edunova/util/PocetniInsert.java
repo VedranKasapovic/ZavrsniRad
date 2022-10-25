@@ -54,6 +54,7 @@ public class PocetniInsert {
         d.setIme("Marija");
         d.setPrezime("Marić");
         d.setLozinka(BCrypt.hashpw("m", BCrypt.gensalt()));
+        d.setAktivan(true);
         sess.persist(d);
     }
 
@@ -62,6 +63,7 @@ public class PocetniInsert {
         d.setIme("Ana");
         d.setPrezime("Anić");
         d.setLozinka(BCrypt.hashpw("a", BCrypt.gensalt()));
+        d.setAktivan(true);
         sess.persist(d);
     }
 
@@ -70,6 +72,7 @@ public class PocetniInsert {
         d.setIme("Ivana");
         d.setPrezime("Ivić");
         d.setLozinka(BCrypt.hashpw("i", BCrypt.gensalt()));
+        d.setAktivan(false);
         sess.persist(d);
     }
 private void kreirajAdministratora(){
@@ -77,6 +80,7 @@ private void kreirajAdministratora(){
         d.setIme("Admin");
         d.setPrezime("Administrator");
         d.setLozinka(BCrypt.hashpw("admin", BCrypt.gensalt()));
+        d.setAktivan(true);
         sess.persist(d);
 }
 

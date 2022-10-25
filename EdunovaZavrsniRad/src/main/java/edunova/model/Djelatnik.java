@@ -5,6 +5,8 @@
 package edunova.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 
 /**
  *
@@ -16,6 +18,18 @@ public class Djelatnik extends Osoba{
     
     private String lozinka;
     private Boolean aktivan;
+    
+    @OneToMany
+    private List<Djelatnik> djelatnici;
+
+    public List<Djelatnik> getDjelatnici() {
+        return djelatnici;
+    }
+
+    public void setDjelatnici(List<Djelatnik> djelatnici) {
+        this.djelatnici = djelatnici;
+    }
+    
 
     public Boolean isAktivan() {
         return aktivan;
@@ -32,4 +46,5 @@ public class Djelatnik extends Osoba{
     public void setLozinka(String lozinka) {
         this.lozinka = lozinka;
     }
+
 }

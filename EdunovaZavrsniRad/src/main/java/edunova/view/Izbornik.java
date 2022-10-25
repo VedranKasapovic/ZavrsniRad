@@ -46,6 +46,11 @@ public class Izbornik extends javax.swing.JFrame {
         jMenu1.setText("Programi");
 
         jmnDjelatnik.setText("Djelatnik");
+        jmnDjelatnik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmnDjelatnikActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmnDjelatnik);
 
         jMenuItem5.setText("Posjeta");
@@ -134,8 +139,12 @@ public class Izbornik extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-          new ProzorDjelatnik().setVisible(true);
+
     }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jmnDjelatnikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmnDjelatnikActionPerformed
+          new ProzorDjelatnik().setVisible(true);
+    }//GEN-LAST:event_jmnDjelatnikActionPerformed
 
     private void postavke() {
         setTitle(Pomocno.NAZIV_APLIKACIJE + " " + Pomocno.djelatnik.getIme() + " " + Pomocno.djelatnik.getPrezime());

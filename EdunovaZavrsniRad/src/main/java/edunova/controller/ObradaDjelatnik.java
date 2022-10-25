@@ -21,20 +21,13 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
     public Djelatnik autoriziraj(Integer sifra, char[] lozinka) {
         Djelatnik d;
         try {
-            //zadnji pokušaj prije predavanja
-           d= session.createQuery("from Djelatnik d where "
-                    + " sifra=:sifra", 
-                Djelatnik.class)
-                .setParameter("sifra", sifra)
+
+            d = session.createQuery("from Djelatnik d where "
+                    + " sifra=:sifra",
+                    Djelatnik.class)
+                    .setParameter("sifra", sifra)
                     .getSingleResult();
 
-// baca grešku prazan entitet
-            /*   d = session.createQuery("from Djelatnik d where d.getIme=:ime AND d.getPrezime=:prezime", Djelatnik.class)
-                    .setParameter("ime"' '"prezime", Djelatnik
-                    .getSingleResult();
-             */
-// treba popraviti. povlači samo za prvoga
-//           d = session.createQuery("from Djelatnik", Djelatnik.class).setMaxResults(1).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
@@ -45,6 +38,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
             vrati.setLozinka(d.getLozinka());
             vrati.setIme(d.getIme());
             vrati.setPrezime(d.getPrezime());
+            vrati.setAktivan(d.isAktivan());
 
             // ne postavljamo lozinku da ne bude u memoriji
             return vrati;
@@ -57,17 +51,18 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
     public List<Djelatnik> read() {
         List<Djelatnik> lista = new ArrayList<>();
         List<Djelatnik> izBaze = session.createQuery("from Djelatnik", Djelatnik.class).list();
-        
+
         Djelatnik d;
-        for(Djelatnik db : izBaze){
-            d=new Djelatnik();
+        for (Djelatnik db : izBaze) {
+            d = new Djelatnik();
             d.setSifra(db.getSifra());
             d.setLozinka(db.getLozinka());
             d.setIme(db.getIme());
             d.setPrezime(db.getPrezime());
+            d.setAktivan(db.isAktivan());
             lista.add(d);
         }
-        
+
         return lista;
     }
 
