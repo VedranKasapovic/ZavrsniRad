@@ -51,7 +51,7 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
         txtIme = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lstDjelatnici = new javax.swing.JList<>();
+        lstEntiteti = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -79,12 +79,12 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
 
         jLabel4.setText("Djelatnici");
 
-        lstDjelatnici.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        lstEntiteti.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstDjelatniciValueChanged(evt);
+                lstEntitetiValueChanged(evt);
             }
         });
-        jScrollPane2.setViewportView(lstDjelatnici);
+        jScrollPane2.setViewportView(lstEntiteti);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,22 +143,22 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lstDjelatniciValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstDjelatniciValueChanged
+    private void lstEntitetiValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstEntitetiValueChanged
         if (evt.getValueIsAdjusting()
-                || lstDjelatnici.getSelectedValue() == null) {
+                || lstEntiteti.getSelectedValue() == null) {
             return;
         }
 
-        obrada.setEntitet(lstDjelatnici.getSelectedValue());
+        obrada.setEntitet(lstEntiteti.getSelectedValue());
         popuniView();
-    }//GEN-LAST:event_lstDjelatniciValueChanged
+    }//GEN-LAST:event_lstEntitetiValueChanged
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
         obrada.setEntitet(new Djelatnik());
         popuniModel();
         try {
             obrada.create();
-            selectedIndex=lstDjelatnici.getModel().getSize();
+            selectedIndex=lstEntiteti.getModel().getSize();
             ucitaj();
         } catch (EdunovaException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getPoruka());
@@ -177,7 +177,7 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
 
         try {
             obrada.update();
-            selectedIndex = lstDjelatnici.getSelectedIndex();
+            selectedIndex = lstEntiteti.getSelectedIndex();
             ucitaj();
         } catch (EdunovaException ex) {
             JOptionPane.showMessageDialog(rootPane, ex.getPoruka());
@@ -198,16 +198,16 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<Djelatnik> lstDjelatnici;
+    private javax.swing.JList<Djelatnik> lstEntiteti;
     private javax.swing.JTextField txtIme;
     private javax.swing.JTextField txtLozinka;
     private javax.swing.JTextField txtPrezime;
     // End of variables declaration//GEN-END:variables
 
     private void ucitaj() {
-        lstDjelatnici.setModel(new IgraonicaListModel<>(obrada.read()));
-        if (lstDjelatnici.getModel().getSize() > 0) {
-            lstDjelatnici.setSelectedIndex(selectedIndex);
+        lstEntiteti.setModel(new IgraonicaListModel<>(obrada.read()));
+        if (lstEntiteti.getModel().getSize() > 0) {
+            lstEntiteti.setSelectedIndex(selectedIndex);
 
         }
 
@@ -231,3 +231,5 @@ public class ProzorDjelatnik extends javax.swing.JFrame {
 
     }
 }
+
+// kod updatea dobijem "detached entity passed to persist: edunova.model.Djelatnik"

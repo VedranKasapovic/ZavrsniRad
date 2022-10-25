@@ -195,3 +195,4 @@ public class Login extends javax.swing.JFrame {
     }
 
 }
+// Popraviti listu da pokazuje samo aktivne članove

@@ -35,7 +35,7 @@ public abstract class Obrada<T extends Entitet> {
 
     public void create() throws EdunovaException {
         if (entitet == null) {
-            throw new EdunovaException(getNazivEntiteta() + " nije konstruiran");
+            throw new EdunovaException(getNazivEntiteta() + " nije  konstruiran");
         }
         kontrolaCreate();
         persist();
@@ -51,6 +51,7 @@ public abstract class Obrada<T extends Entitet> {
         session.beginTransaction();
         session.remove(entitet);
         session.getTransaction().commit();
+
     }
 
     private void persist() {
@@ -66,7 +67,5 @@ public abstract class Obrada<T extends Entitet> {
     public void setEntitet(T entitet) {
         this.entitet = entitet;
     }
-     public void refresh(){
-        session.refresh(entitet);
-    }
+
 }

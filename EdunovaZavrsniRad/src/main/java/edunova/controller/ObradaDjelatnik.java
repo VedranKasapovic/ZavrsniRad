@@ -67,25 +67,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
         return lista;
     }
-//komentar
-    @Override
-    public void update() throws EdunovaException {
-        kontrolaUpdate();
-        session.beginTransaction();
-        for (Djelatnik d : entitet.getDjelatnici()) {
-            session.remove(d);
-        }
-        for (Djelatnik d : noviDjelatnici) {
-            session.persist(d);
-        }
-        entitet.setDjelatnici(noviDjelatnici);
-        session.persist(entitet);
-        session.getTransaction().commit();
-        for (Djelatnik d : noviDjelatnici) {
-            session.refresh(d);
-        }
-    }
-
+   
     @Override
     protected String getNazivEntiteta() {
         return "Djelatnik";
@@ -93,6 +75,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
     @Override
     protected void kontrolaCreate() throws EdunovaException {
+        super.kontrolaCreate();
         kontrolaIme();
         kontrolaPrezime();
     }

@@ -65,6 +65,11 @@ public class Izbornik extends javax.swing.JFrame {
         jMenu1.add(jMenuItem3);
 
         jMenuItem4.setText("Odgovorne osobe");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem4);
 
         jMenuItem2.setText("Odjava");
@@ -145,6 +150,10 @@ public class Izbornik extends javax.swing.JFrame {
     private void jmnDjelatnikActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmnDjelatnikActionPerformed
           new ProzorDjelatnik().setVisible(true);
     }//GEN-LAST:event_jmnDjelatnikActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        new ProzorOdgovornaOsoba().setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void postavke() {
         setTitle(Pomocno.NAZIV_APLIKACIJE + " " + Pomocno.djelatnik.getIme() + " " + Pomocno.djelatnik.getPrezime());
