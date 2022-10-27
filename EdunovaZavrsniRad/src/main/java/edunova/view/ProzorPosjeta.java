@@ -4,8 +4,18 @@
  */
 package edunova.view;
 
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
+import edunova.controller.ObradaDijete;
+import edunova.controller.ObradaOdgovornaOsoba;
+import edunova.controller.ObradaPosjeta;
 import edunova.model.Dijete;
 import edunova.model.OdgovornaOsoba;
+import edunova.util.Pomocno;
+import java.time.LocalTime;
+import java.util.Locale;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -13,11 +23,22 @@ import edunova.model.OdgovornaOsoba;
  */
 public class ProzorPosjeta extends javax.swing.JFrame {
 
+    private ObradaPosjeta obrada;
+    private ObradaOdgovornaOsoba obradaOdgovornaOsoba;
+    private ObradaDijete obradaDijete;
+
+    private int selectedIndex;
     /**
      * Creates new form ProzorPosjeta
      */
     public ProzorPosjeta() {
         initComponents();
+        obrada = new ObradaPosjeta();
+        obradaOdgovornaOsoba = new ObradaOdgovornaOsoba();
+        obradaDijete = new ObradaDijete();
+        selectedIndex = 0;
+        postavke();
+        ucitaj();
     }
 
     /**
@@ -35,13 +56,13 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         txtTraziOdgovornuOsobu = new javax.swing.JTextField();
         btnTrazi = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        lstOdgovorneOsobe = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        lstDjeca = new javax.swing.JList<>();
         dpDatum = new com.github.lgooddatepicker.components.DatePicker();
         tpVrijemeDolaska = new com.github.lgooddatepicker.components.TimePicker();
-        timePicker2 = new com.github.lgooddatepicker.components.TimePicker();
+        tpVrijemeOdlaska = new com.github.lgooddatepicker.components.TimePicker();
         jLabel3 = new javax.swing.JLabel();
         cbGratis = new javax.swing.JCheckBox();
         cbPlaceno = new javax.swing.JCheckBox();
@@ -54,6 +75,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         btnDodaj = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
         btnObriši = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -74,11 +96,21 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
         btnTrazi.setText("Traži");
 
-        jScrollPane1.setViewportView(jList1);
+        lstOdgovorneOsobe.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstOdgovorneOsobeValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(lstOdgovorneOsobe);
 
         jLabel2.setText("Djeca:");
 
-        jScrollPane2.setViewportView(jList2);
+        lstDjeca.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                lstDjecaValueChanged(evt);
+            }
+        });
+        jScrollPane2.setViewportView(lstDjeca);
 
         jLabel3.setText("Vrijeme dolaska");
 
@@ -87,6 +119,8 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         cbPlaceno.setText("Plaćeno");
 
         cbRoditeljskaPratnja.setText("Roditeljska pratnja");
+
+        txtBrojOrmarica.setText("0");
 
         jLabel4.setText("Broj ormarića");
 
@@ -123,6 +157,8 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
         btnObriši.setText("Obriši");
 
+        jLabel6.setText("Današnji datum");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,20 +168,21 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(btnTrazi))
-                            .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(txtTraziOdgovornuOsobu)
                                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(33, 33, 33)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dpDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(btnTrazi)))
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dpDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -158,7 +195,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(txtBrojOrmarica, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(timePicker2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
+                                .addComponent(tpVrijemeOdlaska, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)))
                         .addGap(87, 87, 87)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnPromjeni)
@@ -181,7 +218,9 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tpVrijemeDolaska, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tpVrijemeDolaska, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dpDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbGratis)
@@ -199,11 +238,11 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtBrojOrmarica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(timePicker2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tpVrijemeOdlaska, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtTraziOdgovornuOsobu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dpDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTrazi)
                         .addGap(24, 24, 24)
@@ -223,6 +262,21 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void lstOdgovorneOsobeValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstOdgovorneOsobeValueChanged
+        if (evt.getValueIsAdjusting()
+                || lstOdgovorneOsobe.getSelectedValue() == null) {
+            return;
+        }
+
+        obradaOdgovornaOsoba.setEntitet(lstOdgovorneOsobe.getSelectedValue());
+        popuniView();
+    }//GEN-LAST:event_lstOdgovorneOsobeValueChanged
+
+    private void lstDjecaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstDjecaValueChanged
+        if (evt.getValueIsAdjusting() || lstDjeca.getSelectedValue() == null) {
+            return;
+        }
+    }//GEN-LAST:event_lstDjecaValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -239,17 +293,66 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<OdgovornaOsoba> jList1;
-    private javax.swing.JList<Dijete> jList2;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private com.github.lgooddatepicker.components.TimePicker timePicker2;
+    private javax.swing.JList<Dijete> lstDjeca;
+    private javax.swing.JList<OdgovornaOsoba> lstOdgovorneOsobe;
     private com.github.lgooddatepicker.components.TimePicker tpVrijemeDolaska;
+    private com.github.lgooddatepicker.components.TimePicker tpVrijemeOdlaska;
     private javax.swing.JTextField txtBrojOrmarica;
     private javax.swing.JTextField txtTraziOdgovornuOsobu;
     // End of variables declaration//GEN-END:variables
+
+    private void postavke() {
+        setTitle(Pomocno.NAZIV_APLIKACIJE + " Posjeta");
+        prilagodiDatePicker();
+        lstOdgovorneOsobe.setModel(new DefaultListModel<>());
+    }
+
+    private void ucitaj() {
+        lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
+        if (lstOdgovorneOsobe.getModel().getSize() > 0) {
+            lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
+        }
+    }
+
+    private void prilagodiDatePicker() {
+        DatePickerSettings dps
+                = new DatePickerSettings(new Locale("hr", "HR"));
+        dps.setFormatForDatesCommonEra(Pomocno.FORMAT_DATUMA);
+        dps.setTranslationClear("Očisti");
+        dps.setTranslationToday("Danas");
+        dpDatum.setSettings(dps);
+    }
+
+    private void prilagodiTimePicker() {
+        definirajPostavkeTP();
+
+    }
+
+    private void popuniView() {
+        var e = obrada.getEntitet();
+      //  txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
+        cbGratis.setSelected(e.isGratis());
+        cbPlaceno.setSelected(e.isPlaceno());
+        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
+        dpDatum.setDateToToday();
+        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
+
+//        tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
+    }
+
+    private void definirajPostavkeTP() {
+        TimePickerSettings tps = new TimePickerSettings(new Locale("hr", "HR"));
+        tps.initialTime = LocalTime.now();
+        tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
+        tps.setFormatForDisplayTime("HH:mm");
+        tps.setFormatForMenuTimes("HH:mm");
+    }
+
 }

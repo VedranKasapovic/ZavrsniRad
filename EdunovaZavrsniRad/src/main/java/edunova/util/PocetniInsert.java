@@ -137,7 +137,7 @@ private void kreirajDjecu(int broj) {
         } else {
             p.setOdgovornaOsoba(odgovorneOsobe.get(i));
         }
-        
+        p.setOrmaric(i);
             
             
             
