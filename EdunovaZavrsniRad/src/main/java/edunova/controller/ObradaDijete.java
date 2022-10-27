@@ -6,6 +6,10 @@ package edunova.controller;
 
 import edunova.model.Dijete;
 import edunova.util.EdunovaException;
+import edunova.util.Pomocno;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -20,15 +24,15 @@ public class ObradaDijete extends ObradaOsoba<Dijete> {
         return session.createQuery("from Dijete", Dijete.class).list();
     }
 
-     public List<Dijete> read(String uvjet) {
+    public List<Dijete> read(String uvjet) {
         return session.createQuery("from Dijete d where "
-                + " lower(concat(d.ime,' ', d.prezime)) like :uvjet", 
+                + " lower(concat(d.ime,' ', d.prezime)) like :uvjet",
                 Dijete.class)
                 .setParameter("uvjet", "%" + uvjet.toLowerCase() + "%")
                 .setMaxResults(10)
                 .list();
     }
-    
+
     @Override
     protected void kontrolaCreate() throws EdunovaException {
         super.kontrolaCreate();
@@ -36,32 +40,65 @@ public class ObradaDijete extends ObradaOsoba<Dijete> {
             throw new EdunovaException("Dijete nije konstruirano");
         }
         kontrolaNaziv();
-
+        kontrolaDatumRodjenja();
     }
 
     private void kontrolaNaziv() throws EdunovaException {
 
         if (entitet.getIme() == null || entitet.getIme().isEmpty()) {
-            throw new EdunovaException("Naziv djeteta obavezan");
+            throw new EdunovaException("Ime djeteta obavezno");
         }
-        if(entitet.getIme().length()>20){
+        if (entitet.getIme().length() > 20) {
             throw new EdunovaException("Ime dijeteta ne smije imati više od 20 znakova");
         }
+        if (entitet.getPrezime() == null || entitet.getPrezime().isEmpty()) {
+            throw new EdunovaException("Prezime djeteta obavezno");
+        }
+       
+            
+        
     }
 
     @Override
     protected void kontrolaUpdate() throws EdunovaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        kontrolaCreate();
     }
 
     @Override
     protected void kontrolaDelete() throws EdunovaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (entitet.getOdgovorneOsobe() != null && !entitet.getOdgovorneOsobe().isEmpty()) {
+            throw new EdunovaException("Dijete je dodano odgovornoj osobi");
+
+        }
     }
 
     @Override
     protected String getNazivEntiteta() {
         return "Dijete";
     }
+
+    private void kontrolaDatumRodjenja() throws EdunovaException {
+        kontrolaDatumRodjenjaObavezno();
+        kontrolaDatumRodjenjaVeciOdDanas();
+    }
+
+    private void kontrolaDatumRodjenjaObavezno() throws EdunovaException {
+        if (entitet.getDatumRodjenja() == null) {
+            throw new EdunovaException("Datum rođenja obavezan. npr "
+                    + Pomocno.getPrimjerDatuma());
+        }
+    }
+
+    private void kontrolaDatumRodjenjaVeciOdDanas() throws EdunovaException {
+GregorianCalendar k = (GregorianCalendar) Calendar.getInstance();
+        k.setTime(new Date());
+        k.set(Calendar.HOUR, 0);
+        k.set(Calendar.MINUTE, 0);
+        k.set(Calendar.SECOND, 0);
+        k.set(Calendar.MILLISECOND, 0);
+        if (entitet.getDatumRodjenja().after(k.getTime())) {
+            throw new EdunovaException("Datum rođenja ne može biti poslije danas "
+                    + Pomocno.getPrimjerDatuma());
+        }    }
 
 }
