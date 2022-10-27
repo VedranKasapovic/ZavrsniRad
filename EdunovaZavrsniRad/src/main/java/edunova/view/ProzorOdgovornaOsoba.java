@@ -388,6 +388,18 @@ public class ProzorOdgovornaOsoba extends javax.swing.JFrame {
         e.setEmail(txtEmail.getText());
         e.setTelefon(txtTelefon.getText());
         e.setRod(cmbRod.getSelectedItem().toString());
+        
+        
+        List<Dijete> djeca = new ArrayList<>();
+        
+        DefaultListModel<Dijete> m = (DefaultListModel<Dijete>) lstDijeteOdgovornaOsobe.getModel();
+        for(int i=0;i<m.size();i++){
+            djeca.add(m.get(i));
+        }
+        e.setDjeca(djeca);
+            
+        
+        
     }//GEN-LAST:event_btnDodajActionPerformed
 
     
@@ -424,13 +436,13 @@ public class ProzorOdgovornaOsoba extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void popuniView() {
- var e = obrada.getEntitet();
+        var e = obrada.getEntitet();
         txtIme.setText(e.getIme());
         txtPrezime.setText(e.getPrezime());
         txtEmail.setText(e.getEmail());
         txtTelefon.setText(e.getTelefon());
         cmbRod.setSelectedItem(e.getRod());
-       // lstDijeteOdgovornaOsobe.setModel(new IgraonicaListModel<>(e.getDjeca()));
+        lstDijeteOdgovornaOsobe.setModel(new IgraonicaListModel<>(e.getDjeca()));
     }
 
 }

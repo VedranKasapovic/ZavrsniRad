@@ -25,7 +25,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
         try {
 
             d = session.createQuery("from Djelatnik d where "
-                    + " sifra=:sifra",
+                    + " d.sifra=:sifra and d.aktivan=true",
                     Djelatnik.class)
                     .setParameter("sifra", sifra)
                     .getSingleResult();
@@ -52,7 +52,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
     @Override
     public List<Djelatnik> read() {
         List<Djelatnik> lista = new ArrayList<>();
-        List<Djelatnik> izBaze = session.createQuery("from Djelatnik", Djelatnik.class).list();
+        List<Djelatnik> izBaze = session.createQuery("from Djelatnik d ", Djelatnik.class).list();
 
         Djelatnik d;
         for (Djelatnik db : izBaze) {
@@ -87,7 +87,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
 
     @Override
     protected void kontrolaDelete() throws EdunovaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     private void kontrolaIme() throws EdunovaException {
