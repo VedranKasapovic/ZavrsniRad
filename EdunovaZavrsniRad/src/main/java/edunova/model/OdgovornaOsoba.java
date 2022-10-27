@@ -3,6 +3,7 @@ package edunova.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,34 +16,6 @@ public class OdgovornaOsoba extends Osoba {
 
     @ManyToMany 
     private List<Dijete> djeca = new ArrayList<>();
-
-    public List<Dijete> getDjeca() {
-        return djeca;
-    }
-
-    public void setDjeca(List<Dijete> djeca) {
-        this.djeca = djeca;
-    }
-
-  
-
-    public String getIme() {
-        return ime;
-    }
-
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    public String getPrezime() {
-        return prezime;
-    }
-
-    public void setPrezime(String prezime) {
-        this.prezime = prezime;
-    }
-
-   
 
     public String getEmail() {
         return email;
@@ -68,14 +41,43 @@ public class OdgovornaOsoba extends Osoba {
         this.telefon = telefon;
     }
 
-    public OdgovornaOsoba(String email, String rod, String telefon, List<Dijete> djeca) {
-        this.email = email;
-        this.rod = rod;
-        this.telefon = telefon;
+    public List<Dijete> getDjeca() {
+        return djeca;
+    }
+
+    public void setDjeca(List<Dijete> djeca) {
         this.djeca = djeca;
     }
 
-    public OdgovornaOsoba() {
+    public String getIme() {
+        return ime;
     }
 
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getPrezime() {
+        return prezime;
+    }
+
+    public void setPrezime(String prezime) {
+        this.prezime = prezime;
+    }
+
+    public OdgovornaOsoba() {
+        super();
+    }
+
+    public OdgovornaOsoba(Integer sifra, String ime, String prezime) {
+        super(sifra, ime, prezime);
+    }
+
+    @Override
+    public String toString(){
+        return ime + " " + prezime;
+    }
+  
+
+   
 }

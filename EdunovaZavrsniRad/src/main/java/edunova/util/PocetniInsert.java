@@ -114,6 +114,8 @@ private void kreirajDjecu(int broj) {
         os.setIme(faker.address().firstName());
         os.setPrezime(faker.address().lastName());
         os.setEmail(faker.internet().emailAddress());
+        os.setTelefon(faker.phoneNumber().cellPhone());
+        os.setRod("Ostali");
         os.getDjeca().add(djeca.get(1));
         os.getDjeca().add(djeca.get(3));
         os.getDjeca().add(djeca.get(6));

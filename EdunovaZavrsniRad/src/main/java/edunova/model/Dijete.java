@@ -2,15 +2,42 @@ package edunova.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Dijete extends Osoba{
+public class Dijete extends Osoba {
 
-	private Date datumRodjenja;
+    private Date datumRodjenja;
 
+    @ManyToMany(mappedBy = "djeca")
+    private List<OdgovornaOsoba> odgovorneOsobe ;
+
+    public List<OdgovornaOsoba> getOdgovorneOsobe() {
+        return odgovorneOsobe;
+    }
+
+    public void setOdgovorneOsobe(List<OdgovornaOsoba> odgovorneOsobe) {
+        this.odgovorneOsobe = odgovorneOsobe;
+    }
+    
+    public Dijete() {
+    }
+
+    public Dijete(Integer sifra, String ime, String prezime) {
+        super(sifra, ime, prezime);
+    }
+
+    public Dijete(Date datumRodjenja) {
+        this.datumRodjenja = datumRodjenja;
+    }
+
+    public Dijete(Date datumRodjenja, Integer sifra, String ime, String prezime) {
+        super(sifra, ime, prezime);
+        this.datumRodjenja = datumRodjenja;
+    }
+
+    
     public Date getDatumRodjenja() {
         return datumRodjenja;
     }
@@ -35,13 +62,11 @@ public class Dijete extends Osoba{
         this.prezime = prezime;
     }
 
-    public Dijete() {
-    }
-      
-   
-	
+    
+
+
     @Override
-    public String toString(){
-        return ime+" "+prezime;
+    public String toString() {
+        return ime + " " + prezime;
     }
 }

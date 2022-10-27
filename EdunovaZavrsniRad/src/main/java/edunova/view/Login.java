@@ -23,6 +23,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         postavke();
+        cmbDjelatnik.getFocusCycleRootAncestor();
     }
 
     /**
@@ -138,12 +139,10 @@ public class Login extends javax.swing.JFrame {
     private void txtLozinkaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLozinkaKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (txtLozinka.getPassword().length == 0) {
+                
                 return;
             }
-            if (cmbDjelatnik.getName().isBlank() || cmbDjelatnik.getName().isEmpty()) {
-                cmbDjelatnik.requestFocus();
-                return;
-            }
+                        
             autorizacija();
         }
      }//GEN-LAST:event_txtLozinkaKeyPressed

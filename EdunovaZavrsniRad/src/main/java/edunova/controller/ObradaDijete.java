@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Veky
  */
-public class ObradaDijete extends Obrada<Dijete> {
+public class ObradaDijete extends ObradaOsoba<Dijete> {
 
     @Override
     public List<Dijete> read() {
@@ -20,8 +20,18 @@ public class ObradaDijete extends Obrada<Dijete> {
         return session.createQuery("from Dijete", Dijete.class).list();
     }
 
+     public List<Dijete> read(String uvjet) {
+        return session.createQuery("from Dijete d where "
+                + " lower(concat(d.ime,' ', d.prezime)) like :uvjet", 
+                Dijete.class)
+                .setParameter("uvjet", "%" + uvjet.toLowerCase() + "%")
+                .setMaxResults(10)
+                .list();
+    }
+    
     @Override
     protected void kontrolaCreate() throws EdunovaException {
+        super.kontrolaCreate();
         if (entitet == null) {
             throw new EdunovaException("Dijete nije konstruirano");
         }
@@ -51,7 +61,7 @@ public class ObradaDijete extends Obrada<Dijete> {
 
     @Override
     protected String getNazivEntiteta() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return "Dijete";
     }
 
 }
