@@ -20,24 +20,12 @@ import java.util.List;
  */
 public class ObradaPosjeta extends Obrada<Posjeta> {
 
-    private List<Dijete> djeca;
-    private List<OdgovornaOsoba> odgovorneOsobe;
-    
-    public void crate() throws EdunovaException {
-        kontrolaCreate();
-        session.beginTransaction();
-        session.persist(entitet);
-        for (OdgovornaOsoba os :odgovorneOsobe) {
-            os.setDjeca((List<Dijete>) entitet);
-            session.persist(os);
-        }
-        entitet.setOdgovornaOsoba((OdgovornaOsoba) odgovorneOsobe);
-        session.getTransaction().commit();
-    }
+  
 
     @Override
     public List<Posjeta> read() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            return session.createQuery("from Posjeta", Posjeta.class).list();
+    
     }
 
     @Override
@@ -64,7 +52,8 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
 
     @Override
     protected String getNazivEntiteta() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+      return "Posjeta";
     }
 
     private void kontrolaOdgovornaOsoba() throws EdunovaException {

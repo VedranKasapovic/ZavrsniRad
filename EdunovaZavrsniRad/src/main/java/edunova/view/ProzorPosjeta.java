@@ -13,7 +13,9 @@ import edunova.controller.ObradaPosjeta;
 import edunova.model.Dijete;
 import edunova.model.OdgovornaOsoba;
 import edunova.util.Pomocno;
+import java.awt.event.KeyEvent;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.DefaultListModel;
 
@@ -70,7 +72,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         txtBrojOrmarica = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblPosjeta = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         btnDodaj = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
@@ -94,7 +96,18 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
         jLabel1.setText("Odgovorna osoba:");
 
+        txtTraziOdgovornuOsobu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTraziOdgovornuOsobuKeyPressed(evt);
+            }
+        });
+
         btnTrazi.setText("Traži");
+        btnTrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTraziActionPerformed(evt);
+            }
+        });
 
         lstOdgovorneOsobe.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -124,7 +137,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
         jLabel4.setText("Broj ormarića");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblPosjeta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -147,7 +160,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable2);
+        jScrollPane4.setViewportView(tblPosjeta);
 
         jLabel5.setText("Posjeta:");
 
@@ -278,6 +291,33 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lstDjecaValueChanged
 
+    private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
+        List<OdgovornaOsoba> odgovornaOsoba = 
+                obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText().trim());
+
+        
+        
+        lstOdgovorneOsobe.setModel(
+                new IgraonicaListModel<>(odgovornaOsoba)
+        );
+        if(odgovornaOsoba.isEmpty()){
+            txtTraziOdgovornuOsobu.requestFocus();
+            return;
+        }
+        try {
+            lstOdgovorneOsobe.setSelectedIndex(0);
+        } catch (Exception e) {
+        }
+        lstDjeca.requestFocus();
+    }//GEN-LAST:event_btnTraziActionPerformed
+
+    private void txtTraziOdgovornuOsobuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTraziOdgovornuOsobuKeyPressed
+if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
+            return;
+        }
+        btnTraziActionPerformed(null);
+    }//GEN-LAST:event_txtTraziOdgovornuOsobuKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodaj;
@@ -299,9 +339,9 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JList<Dijete> lstDjeca;
     private javax.swing.JList<OdgovornaOsoba> lstOdgovorneOsobe;
+    private javax.swing.JTable tblPosjeta;
     private com.github.lgooddatepicker.components.TimePicker tpVrijemeDolaska;
     private com.github.lgooddatepicker.components.TimePicker tpVrijemeOdlaska;
     private javax.swing.JTextField txtBrojOrmarica;
@@ -319,6 +359,8 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         if (lstOdgovorneOsobe.getModel().getSize() > 0) {
             lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
         }
+        
+        
     }
 
     private void prilagodiDatePicker() {
@@ -336,13 +378,15 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     }
 
     private void popuniView() {
-        var e = obrada.getEntitet();
-      //  txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
-        cbGratis.setSelected(e.isGratis());
-        cbPlaceno.setSelected(e.isPlaceno());
-        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
-        dpDatum.setDateToToday();
-        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
+       
+//U lst postavljaš dgovornu osobu obrada a ovdje zoveš   obrada.getEntitet() koji nije postavljen u lstXXXValueChange
+//var e = obrada.getEntitet();
+//        txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
+//        cbGratis.setSelected(e.isGratis());
+//        cbPlaceno.setSelected(e.isPlaceno());
+//        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
+//        dpDatum.setDateToToday();
+//        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
 
 //        tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
     }
