@@ -230,14 +230,13 @@ public class ProzorOdgovornaOsoba extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtTraziDijete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblBrojDjece, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(txtTraziDijete, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7)))
+                                .addComponent(lblBrojDjece, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(44, 44, 44)
@@ -377,13 +376,8 @@ public class ProzorOdgovornaOsoba extends javax.swing.JFrame {
 
     
     private Dijete kreirajDijete(OdgovornaOsoba entitet, Dijete d) {
-        DefaultListModel<Dijete> dj = (DefaultListModel<Dijete>) lstDjecaUBazi.getModel();
-        for (Dijete dd : lstDjecaUBazi.getSelectedValuesList()){
-            dj.addElement(dd);
-        }
-        
-        //List<Dijete> dijete=new ArrayList<>();
-        //d.getOdgovorneOsobe().add(entitet);
+        List<Dijete> dijete=new ArrayList<>();
+        d.getOdgovorneOsobe().add(entitet);
         return d;
                 
         }

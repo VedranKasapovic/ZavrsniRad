@@ -13,21 +13,16 @@ import edunova.controller.ObradaPosjeta;
 import edunova.model.Dijete;
 import edunova.model.OdgovornaOsoba;
 import edunova.model.Posjeta;
-import edunova.util.HibernateUtil;
 import edunova.util.Pomocno;
-import java.awt.event.KeyEvent;
-import java.text.Collator;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -38,10 +33,9 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private ObradaPosjeta obrada;
     private ObradaOdgovornaOsoba obradaOdgovornaOsoba;
     private ObradaDijete obradaDijete;
+    private SimpleDateFormat df;
 
     private int selectedIndex;
-    private List<PopisPosjeta> lista;
-
     /**
      * Creates new form ProzorPosjeta
      */
@@ -50,6 +44,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         obrada = new ObradaPosjeta();
         obradaOdgovornaOsoba = new ObradaOdgovornaOsoba();
         obradaDijete = new ObradaDijete();
+        df = new SimpleDateFormat("HH:mm");
         selectedIndex = 0;
         postavke();
         ucitaj();
@@ -64,8 +59,6 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         txtTraziOdgovornuOsobu = new javax.swing.JTextField();
         btnTrazi = new javax.swing.JButton();
@@ -84,35 +77,16 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         txtBrojOrmarica = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tblPosjeta = new javax.swing.JTable();
+        tblPosjete = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         btnDodaj = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
         btnObriši = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane3.setViewportView(jTable1);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Odgovorna osoba:");
-
-        txtTraziOdgovornuOsobu.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtTraziOdgovornuOsobuKeyPressed(evt);
-            }
-        });
 
         btnTrazi.setText("Traži");
         btnTrazi.addActionListener(new java.awt.event.ActionListener() {
@@ -149,15 +123,39 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
         jLabel4.setText("Broj ormarića");
 
-        tblPosjeta.setModel(new javax.swing.table.DefaultTableModel(
+        tblPosjete.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-
+                "Dijete", "Vrijeme ulaska", "Vrijeme izlaska", "Plaćeno", "Roditeljska pratnja", "Gratis", "Broj ormarića", " "
             }
-        ));
-        jScrollPane4.setViewportView(tblPosjeta);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPosjete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPosjeteMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tblPosjete);
+        if (tblPosjete.getColumnModel().getColumnCount() > 0) {
+            tblPosjete.getColumnModel().getColumn(7).setResizable(false);
+            tblPosjete.getColumnModel().getColumn(7).setPreferredWidth(0);
+        }
 
         jLabel5.setText("Posjeta:");
 
@@ -279,7 +277,8 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         }
 
         obradaOdgovornaOsoba.setEntitet(lstOdgovorneOsobe.getSelectedValue());
-        popuniView();
+       // učitati djecu odgovorne osobe
+        //popuniView();
     }//GEN-LAST:event_lstOdgovorneOsobeValueChanged
 
     private void lstDjecaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstDjecaValueChanged
@@ -288,31 +287,23 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lstDjecaValueChanged
 
+    private void tblPosjeteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPosjeteMouseClicked
+        //System.out.println(jTable2.getse);
+        //Integer sifraPosjeta = (Integer) tblPosjete.getValueAt(tblPosjete.getSelectedRow(), 7);
+        
+        PosjetaTableModel pm = (PosjetaTableModel) tblPosjete.getModel();
+        
+        obrada.setEntitet(pm.getPosjeta(tblPosjete.getSelectedRow()));
+        // poziv popuni view
+        popuniView();
+    }//GEN-LAST:event_tblPosjeteMouseClicked
+
     private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
-
-        List<OdgovornaOsoba> odgovornaOsoba
-                = obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText().trim());
-
-        lstOdgovorneOsobe.setModel(
-                new IgraonicaListModel<>(odgovornaOsoba)
-        );
-        if (odgovornaOsoba.isEmpty()) {
-            txtTraziOdgovornuOsobu.requestFocus();
-            return;
-        }
-        try {
-            lstOdgovorneOsobe.setSelectedIndex(0);
-        } catch (Exception e) {
-        }
-        lstDjeca.requestFocus();
+ lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText())));
+        if (lstOdgovorneOsobe.getModel().getSize() > 0) {
+            lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
+        }        
     }//GEN-LAST:event_btnTraziActionPerformed
-
-    private void txtTraziOdgovornuOsobuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTraziOdgovornuOsobuKeyPressed
-        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
-            return;
-        }
-        btnTraziActionPerformed(null);
-    }//GEN-LAST:event_txtTraziOdgovornuOsobuKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -332,12 +323,10 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
     private javax.swing.JList<Dijete> lstDjeca;
     private javax.swing.JList<OdgovornaOsoba> lstOdgovorneOsobe;
-    private javax.swing.JTable tblPosjeta;
+    private javax.swing.JTable tblPosjete;
     private com.github.lgooddatepicker.components.TimePicker tpVrijemeDolaska;
     private com.github.lgooddatepicker.components.TimePicker tpVrijemeOdlaska;
     private javax.swing.JTextField txtBrojOrmarica;
@@ -347,22 +336,18 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private void postavke() {
         setTitle(Pomocno.NAZIV_APLIKACIJE + " Posjeta");
         prilagodiDatePicker();
-        lstOdgovorneOsobe.setModel(new DefaultListModel<>());
+       lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
+        if (lstOdgovorneOsobe.getModel().getSize() > 0) {
+            lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
+        }
     }
 
     private void ucitaj() {
-        /*  lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
-        if (lstOdgovorneOsobe.getModel().getSize() > 0) {
-            lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
-        }*/
-        DefaultListModel<OdgovornaOsoba> m = new DefaultListModel<>();
-        List<OdgovornaOsoba> entiteti = obradaOdgovornaOsoba.read();
-
-        for (OdgovornaOsoba s : entiteti) {
-            m.addElement(s);
-        }
-        lstOdgovorneOsobe.setModel(m);
-
+       
+       
+        
+       // tblPosjete.setc
+       tblPosjete.setModel(new PosjetaTableModel(obrada.read()));
     }
 
     private void prilagodiDatePicker() {
@@ -380,60 +365,17 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     }
 
     private void popuniView() {
-
-        var e = obradaOdgovornaOsoba.getEntitet();
-        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
-        cbGratis.setSelected(obrada.getEntitet().isGratis());
-        cbPlaceno.setSelected(obrada.getEntitet().isPlaceno());
-        cbRoditeljskaPratnja.setSelected(obrada.getEntitet().isRoditeljskaPratnja());
-        dpDatum.setDateToToday();
-
-        DefaultTableModel model = (DefaultTableModel) tblPosjeta.getModel();
-        model.setRowCount(0);
-        lista = new ArrayList<>();
-
-        for (Posjeta p : e.getIme()) {
-            for (OdgovorneOsoba oo : p.getOdgovornaOsoba()) {
-                for (Dijete d : oo.getDjeca()) {
-                    lista.add(new PopisPosjeta(d.getIme(), p.getVrijemeDolaska(), p.getVrijemeOdlaska(), p.isPlaceno(), p.isRoditeljskaPratnja(), p.isGratis(), p.getOrmaric()));
-                }
-            }
-        }
-            Collections.sort(lista, Comparator.comparing(PopisPosjeta::getVrijemeDolaska, Collator.getInstance(new Locale("hr", "HR"))));
-
-            Vector<String> row;
-
-            for (PopisPosjeta pp : lista) {
-                row = new Vector<>();
-                row.add(pp.getIme());
-                row.add(pp.getVrijemeDolaska().toString());
-                row.add(pp.getVrijemeOdlaska().toString());
-                row.add(pp.getPlaceno().toString());
-                row.add(pp.getRoditeljskaPratnja().toString());
-                row.add(pp.getGratis().toString());
-                //row.add(pp.getOrmaric());
-                
-                model.addRow(row);
-        
-            }
-        
-
-        /* var p = obrada.getEntitet();
-        cbGratis.setSelected(p.isGratis());
-        cbPlaceno.setSelected(p.isGratis());
-        cbRoditeljskaPratnja.setSelected(p.isGratis());
-        dpDatum.setDateToToday();*/
-        //  tpVrijemeDolaska.setTime(p.getVrijemeDolaska());
-        //  tpVrijemeOdlaska.set(p.getVrijemeOdlaska());
 //U lst postavljaš dgovornu osobu obrada a ovdje zoveš   obrada.getEntitet() koji nije postavljen u lstXXXValueChange
-//var e = obrada.getEntitet();
-//        txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
-//        cbGratis.setSelected(e.isGratis());
-//        cbPlaceno.setSelected(e.isPlaceno());
-//        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
-//        dpDatum.setDateToToday();
-//        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
-//        tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
+var e = obrada.getEntitet();
+
+        txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
+        cbGratis.setSelected(e.isGratis());
+        cbPlaceno.setSelected(e.isPlaceno());
+        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
+        dpDatum.setDateToToday();
+        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
+
+//       tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
     }
 
     private void definirajPostavkeTP() {
@@ -442,76 +384,6 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
         tps.setFormatForDisplayTime("HH:mm");
         tps.setFormatForMenuTimes("HH:mm");
-    }
-
-    private class PopisPosjeta {
-
-        private String ime;
-        private Date vrijemeDolaska;
-        private Date vrijemeOdlaska;
-        private Boolean placeno;
-        private Boolean roditeljskaPratnja;
-        private Boolean gratis;
-        private int ormaric;
-
-        public String getIme() {
-            return ime;
-        }
-
-        public void setIme(String ime) {
-            this.ime = ime;
-        }
-
-        public Date getVrijemeDolaska() {
-            return vrijemeDolaska;
-        }
-
-        public void setVrijemeDolaska(Date vrijemeDolaska) {
-            this.vrijemeDolaska = vrijemeDolaska;
-        }
-
-        public Date getVrijemeOdlaska() {
-            return vrijemeOdlaska;
-        }
-
-        public void setVrijemeOdlaska(Date vrijemeOdlaska) {
-            this.vrijemeOdlaska = vrijemeOdlaska;
-        }
-
-        public Boolean getPlaceno() {
-            return placeno;
-        }
-
-        public void setPlaceno(Boolean placeno) {
-            this.placeno = placeno;
-        }
-
-        public Boolean getRoditeljskaPratnja() {
-            return roditeljskaPratnja;
-        }
-
-        public void setRoditeljskaPratnja(Boolean roditeljskaPratnja) {
-            this.roditeljskaPratnja = roditeljskaPratnja;
-        }
-
-        public Boolean getGratis() {
-            return gratis;
-        }
-
-        public void setGratis(Boolean gratis) {
-            this.gratis = gratis;
-        }
-
-        public int getOrmaric() {
-            return ormaric;
-        }
-
-        public void setOrmaric(int ormaric) {
-            this.ormaric = ormaric;
-        }
-
-        public PopisPosjeta(String ime, Date vrijemeDolaska, Date vrijemeOdlaska, Boolean placeno, Boolean roditeljskaPratnja, Boolean gratis, Integer ormaric) {
-        }
     }
 
 }

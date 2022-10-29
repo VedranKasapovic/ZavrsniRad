@@ -52,7 +52,7 @@ public class ObradaDjelatnik extends ObradaOsoba<Djelatnik> {
     @Override
     public List<Djelatnik> read() {
         List<Djelatnik> lista = new ArrayList<>();
-        List<Djelatnik> izBaze = session.createQuery("from Djelatnik d where aktivan=true", Djelatnik.class).list();
+        List<Djelatnik> izBaze = session.createQuery("from Djelatnik", Djelatnik.class).list();
 
         Djelatnik d;
         for (Djelatnik db : izBaze) {

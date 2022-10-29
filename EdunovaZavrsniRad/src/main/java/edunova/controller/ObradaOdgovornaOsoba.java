@@ -33,7 +33,7 @@ public class ObradaOdgovornaOsoba extends Obrada<OdgovornaOsoba> {
     }
 
     public List<OdgovornaOsoba> read(String uvjet) {
-        return session.createQuery("from OdgovornaOsoba where "
+        return session.createQuery("from OdgovornaOsoba p where "
                 + " lower(concat(p.ime,' ',p.prezime)) like :uvjet", OdgovornaOsoba.class)
                 .setParameter("uvjet", "%" + uvjet.toLowerCase() + "%")
                 .list();

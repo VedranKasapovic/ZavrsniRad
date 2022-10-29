@@ -174,7 +174,12 @@ public class Login extends javax.swing.JFrame {
     private void ucitajDjelatnike() {
         DefaultComboBoxModel<Djelatnik> d
                 = new DefaultComboBoxModel<>();
-        d.addAll(new ObradaDjelatnik().read());
+        for(Djelatnik dj : new ObradaDjelatnik().read() ){
+            if(dj.isAktivan()){
+                d.addElement(dj);
+            }
+        }
+        
         cmbDjelatnik.setModel(d);
         txtLozinka.setText("admin");
     }
