@@ -12,12 +12,22 @@ import edunova.controller.ObradaOdgovornaOsoba;
 import edunova.controller.ObradaPosjeta;
 import edunova.model.Dijete;
 import edunova.model.OdgovornaOsoba;
+import edunova.model.Posjeta;
+import edunova.util.HibernateUtil;
 import edunova.util.Pomocno;
 import java.awt.event.KeyEvent;
+import java.text.Collator;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -30,6 +40,8 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private ObradaDijete obradaDijete;
 
     private int selectedIndex;
+    private List<PopisPosjeta> lista;
+
     /**
      * Creates new form ProzorPosjeta
      */
@@ -142,24 +154,9 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Dijete", "Vrijeme ulaska", "Vrijeme izlaska", "Plaćeno", "Roditeljska pratnja", "Gratis", "Broj ormarića"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         jScrollPane4.setViewportView(tblPosjeta);
 
         jLabel5.setText("Posjeta:");
@@ -292,15 +289,14 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     }//GEN-LAST:event_lstDjecaValueChanged
 
     private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
-        List<OdgovornaOsoba> odgovornaOsoba = 
-                obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText().trim());
 
-        
-        
+        List<OdgovornaOsoba> odgovornaOsoba
+                = obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText().trim());
+
         lstOdgovorneOsobe.setModel(
                 new IgraonicaListModel<>(odgovornaOsoba)
         );
-        if(odgovornaOsoba.isEmpty()){
+        if (odgovornaOsoba.isEmpty()) {
             txtTraziOdgovornuOsobu.requestFocus();
             return;
         }
@@ -312,7 +308,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTraziActionPerformed
 
     private void txtTraziOdgovornuOsobuKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTraziOdgovornuOsobuKeyPressed
-if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
             return;
         }
         btnTraziActionPerformed(null);
@@ -355,12 +351,18 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
     }
 
     private void ucitaj() {
-        lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
+        /*  lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
         if (lstOdgovorneOsobe.getModel().getSize() > 0) {
             lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
+        }*/
+        DefaultListModel<OdgovornaOsoba> m = new DefaultListModel<>();
+        List<OdgovornaOsoba> entiteti = obradaOdgovornaOsoba.read();
+
+        for (OdgovornaOsoba s : entiteti) {
+            m.addElement(s);
         }
-        
-        
+        lstOdgovorneOsobe.setModel(m);
+
     }
 
     private void prilagodiDatePicker() {
@@ -378,7 +380,51 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
     }
 
     private void popuniView() {
-       
+
+        var e = obradaOdgovornaOsoba.getEntitet();
+        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
+        cbGratis.setSelected(obrada.getEntitet().isGratis());
+        cbPlaceno.setSelected(obrada.getEntitet().isPlaceno());
+        cbRoditeljskaPratnja.setSelected(obrada.getEntitet().isRoditeljskaPratnja());
+        dpDatum.setDateToToday();
+
+        DefaultTableModel model = (DefaultTableModel) tblPosjeta.getModel();
+        model.setRowCount(0);
+        lista = new ArrayList<>();
+
+        for (Posjeta p : e.getIme()) {
+            for (OdgovorneOsoba oo : p.getOdgovornaOsoba()) {
+                for (Dijete d : oo.getDjeca()) {
+                    lista.add(new PopisPosjeta(d.getIme(), p.getVrijemeDolaska(), p.getVrijemeOdlaska(), p.isPlaceno(), p.isRoditeljskaPratnja(), p.isGratis(), p.getOrmaric()));
+                }
+            }
+        }
+            Collections.sort(lista, Comparator.comparing(PopisPosjeta::getVrijemeDolaska, Collator.getInstance(new Locale("hr", "HR"))));
+
+            Vector<String> row;
+
+            for (PopisPosjeta pp : lista) {
+                row = new Vector<>();
+                row.add(pp.getIme());
+                row.add(pp.getVrijemeDolaska().toString());
+                row.add(pp.getVrijemeOdlaska().toString());
+                row.add(pp.getPlaceno().toString());
+                row.add(pp.getRoditeljskaPratnja().toString());
+                row.add(pp.getGratis().toString());
+                //row.add(pp.getOrmaric());
+                
+                model.addRow(row);
+        
+            }
+        
+
+        /* var p = obrada.getEntitet();
+        cbGratis.setSelected(p.isGratis());
+        cbPlaceno.setSelected(p.isGratis());
+        cbRoditeljskaPratnja.setSelected(p.isGratis());
+        dpDatum.setDateToToday();*/
+        //  tpVrijemeDolaska.setTime(p.getVrijemeDolaska());
+        //  tpVrijemeOdlaska.set(p.getVrijemeOdlaska());
 //U lst postavljaš dgovornu osobu obrada a ovdje zoveš   obrada.getEntitet() koji nije postavljen u lstXXXValueChange
 //var e = obrada.getEntitet();
 //        txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
@@ -387,7 +433,6 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
 //        cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
 //        dpDatum.setDateToToday();
 //        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
-
 //        tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
     }
 
@@ -397,6 +442,76 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
         tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
         tps.setFormatForDisplayTime("HH:mm");
         tps.setFormatForMenuTimes("HH:mm");
+    }
+
+    private class PopisPosjeta {
+
+        private String ime;
+        private Date vrijemeDolaska;
+        private Date vrijemeOdlaska;
+        private Boolean placeno;
+        private Boolean roditeljskaPratnja;
+        private Boolean gratis;
+        private int ormaric;
+
+        public String getIme() {
+            return ime;
+        }
+
+        public void setIme(String ime) {
+            this.ime = ime;
+        }
+
+        public Date getVrijemeDolaska() {
+            return vrijemeDolaska;
+        }
+
+        public void setVrijemeDolaska(Date vrijemeDolaska) {
+            this.vrijemeDolaska = vrijemeDolaska;
+        }
+
+        public Date getVrijemeOdlaska() {
+            return vrijemeOdlaska;
+        }
+
+        public void setVrijemeOdlaska(Date vrijemeOdlaska) {
+            this.vrijemeOdlaska = vrijemeOdlaska;
+        }
+
+        public Boolean getPlaceno() {
+            return placeno;
+        }
+
+        public void setPlaceno(Boolean placeno) {
+            this.placeno = placeno;
+        }
+
+        public Boolean getRoditeljskaPratnja() {
+            return roditeljskaPratnja;
+        }
+
+        public void setRoditeljskaPratnja(Boolean roditeljskaPratnja) {
+            this.roditeljskaPratnja = roditeljskaPratnja;
+        }
+
+        public Boolean getGratis() {
+            return gratis;
+        }
+
+        public void setGratis(Boolean gratis) {
+            this.gratis = gratis;
+        }
+
+        public int getOrmaric() {
+            return ormaric;
+        }
+
+        public void setOrmaric(int ormaric) {
+            this.ormaric = ormaric;
+        }
+
+        public PopisPosjeta(String ime, Date vrijemeDolaska, Date vrijemeOdlaska, Boolean placeno, Boolean roditeljskaPratnja, Boolean gratis, Integer ormaric) {
+        }
     }
 
 }

@@ -377,8 +377,13 @@ public class ProzorOdgovornaOsoba extends javax.swing.JFrame {
 
     
     private Dijete kreirajDijete(OdgovornaOsoba entitet, Dijete d) {
-        List<Dijete> dijete=new ArrayList<>();
-        d.getOdgovorneOsobe().add(entitet);
+        DefaultListModel<Dijete> dj = (DefaultListModel<Dijete>) lstDjecaUBazi.getModel();
+        for (Dijete dd : lstDjecaUBazi.getSelectedValuesList()){
+            dj.addElement(dd);
+        }
+        
+        //List<Dijete> dijete=new ArrayList<>();
+        //d.getOdgovorneOsobe().add(entitet);
         return d;
                 
         }
