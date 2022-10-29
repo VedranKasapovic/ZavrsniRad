@@ -16,6 +16,8 @@ import edunova.model.Posjeta;
 import edunova.util.Pomocno;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
@@ -275,9 +277,32 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                 || lstOdgovorneOsobe.getSelectedValue() == null) {
             return;
         }
-
+        
+        
+        
+        DefaultListModel<Dijete> m = new DefaultListModel<>();
+        for (Dijete d : lstOdgovorneOsobe.getSelectedValue().getDjeca()){
+            m.addElement(d);
+        }
+        lstDjeca.setModel(m);
+            
+        
+        
+        
+        
+       
+/*
         obradaOdgovornaOsoba.setEntitet(lstOdgovorneOsobe.getSelectedValue());
-       // učitati djecu odgovorne osobe
+        
+        DefaultListModel<Dijete> m = (DefaultListModel<Dijete>) lstDjeca.getModel();
+
+        for (OdgovornaOsoba oo : lstOdgovorneOsobe.getSelectedValuesList()) {
+
+            m.addAll(oo.getDjeca());
+            lstDjeca.setModel(m);
+            
+            }
+  */     // učitati djecu odgovorne osobe
         //popuniView();
     }//GEN-LAST:event_lstOdgovorneOsobeValueChanged
 
@@ -344,6 +369,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
     private void ucitaj() {
        
+
        
         
        // tblPosjete.setc
@@ -374,7 +400,7 @@ var e = obrada.getEntitet();
         cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
         dpDatum.setDateToToday();
         lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
-
+ 
 //       tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
     }
 
