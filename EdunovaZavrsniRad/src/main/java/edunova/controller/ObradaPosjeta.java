@@ -9,10 +9,12 @@ import edunova.model.OdgovornaOsoba;
 import edunova.model.Posjeta;
 import edunova.util.EdunovaException;
 import edunova.util.Pomocno;
+import jakarta.persistence.OneToOne;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import org.hibernate.Session;
 
 /**
  *
@@ -20,7 +22,32 @@ import java.util.List;
  */
 public class ObradaPosjeta extends Obrada<Posjeta> {
 
-  
+    @OneToOne
+    private List<Posjeta> posjete;
+
+    public List<Posjeta> getPosjete() {
+        return posjete;
+    }
+
+    public void setPosjete(List<Posjeta> posjete) {
+        this.posjete = posjete;
+    }
+
+    public Posjeta getEntitet() {
+        return entitet;
+    }
+
+    public void setEntitet(Posjeta entitet) {
+        this.entitet = entitet;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
 
     @Override
     public List<Posjeta> read() {
