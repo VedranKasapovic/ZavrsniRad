@@ -13,14 +13,17 @@ import edunova.controller.ObradaPosjeta;
 import edunova.model.Dijete;
 import edunova.model.OdgovornaOsoba;
 import edunova.model.Posjeta;
+import edunova.util.EdunovaException;
 import edunova.util.Pomocno;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -38,6 +41,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private SimpleDateFormat df;
 
     private int selectedIndex;
+
     /**
      * Creates new form ProzorPosjeta
      */
@@ -162,8 +166,18 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         jLabel5.setText("Posjeta:");
 
         btnDodaj.setText("Dodaj");
+        btnDodaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDodajActionPerformed(evt);
+            }
+        });
 
         btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
 
         btnObriši.setText("Obriši");
 
@@ -277,33 +291,14 @@ public class ProzorPosjeta extends javax.swing.JFrame {
                 || lstOdgovorneOsobe.getSelectedValue() == null) {
             return;
         }
-        
-        
-        
+
         DefaultListModel<Dijete> m = new DefaultListModel<>();
-        for (Dijete d : lstOdgovorneOsobe.getSelectedValue().getDjeca()){
+        for (Dijete d : lstOdgovorneOsobe.getSelectedValue().getDjeca()) {
             m.addElement(d);
         }
         lstDjeca.setModel(m);
-            
-        
-        
-        
-        
-       
-/*
-        obradaOdgovornaOsoba.setEntitet(lstOdgovorneOsobe.getSelectedValue());
-        
-        DefaultListModel<Dijete> m = (DefaultListModel<Dijete>) lstDjeca.getModel();
 
-        for (OdgovornaOsoba oo : lstOdgovorneOsobe.getSelectedValuesList()) {
 
-            m.addAll(oo.getDjeca());
-            lstDjeca.setModel(m);
-            
-            }
-  */     // učitati djecu odgovorne osobe
-        //popuniView();
     }//GEN-LAST:event_lstOdgovorneOsobeValueChanged
 
     private void lstDjecaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstDjecaValueChanged
@@ -315,20 +310,55 @@ public class ProzorPosjeta extends javax.swing.JFrame {
     private void tblPosjeteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPosjeteMouseClicked
         //System.out.println(jTable2.getse);
         //Integer sifraPosjeta = (Integer) tblPosjete.getValueAt(tblPosjete.getSelectedRow(), 7);
-        
+
         PosjetaTableModel pm = (PosjetaTableModel) tblPosjete.getModel();
-        
+
         obrada.setEntitet(pm.getPosjeta(tblPosjete.getSelectedRow()));
         // poziv popuni view
         popuniView();
     }//GEN-LAST:event_tblPosjeteMouseClicked
 
     private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
- lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText())));
+        lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read(txtTraziOdgovornuOsobu.getText())));
         if (lstOdgovorneOsobe.getModel().getSize() > 0) {
             lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
-        }        
+        }
     }//GEN-LAST:event_btnTraziActionPerformed
+
+    private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
+        obrada.setEntitet(new Posjeta());
+        popuniModel();
+
+        try {
+            obrada.create();
+            ucitaj();
+        } catch (EdunovaException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getPoruka());
+           
+        }
+
+      
+
+    }//GEN-LAST:event_btnDodajActionPerformed
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+
+        if (obrada.getEntitet() == null) {
+            JOptionPane.showMessageDialog(rootPane, 
+                    "Prvo odaberite posjetu");
+            return;
+        }
+        popuniModel();
+
+        try {
+            obrada.update();
+            ucitaj();
+        } catch (EdunovaException e) {
+            obrada.refresh();
+            JOptionPane.showMessageDialog(rootPane,
+                    e.getPoruka());
+        }
+    }//GEN-LAST:event_btnPromjeniActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -360,20 +390,18 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
     private void postavke() {
         setTitle(Pomocno.NAZIV_APLIKACIJE + " Posjeta");
-        prilagodiDatePicker();
-       lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
+        //      prilagodiDatePicker();
+        //      prilagodiTimePicker();
+        lstOdgovorneOsobe.setModel(new IgraonicaListModel<>(obradaOdgovornaOsoba.read()));
         if (lstOdgovorneOsobe.getModel().getSize() > 0) {
             lstOdgovorneOsobe.setSelectedIndex(selectedIndex);
         }
     }
 
     private void ucitaj() {
-       
 
-       
-        
-       // tblPosjete.setc
-       tblPosjete.setModel(new PosjetaTableModel(obrada.read()));
+        // tblPosjete.setc
+        tblPosjete.setModel(new PosjetaTableModel(obrada.read()));
     }
 
     private void prilagodiDatePicker() {
@@ -392,24 +420,68 @@ public class ProzorPosjeta extends javax.swing.JFrame {
 
     private void popuniView() {
 //U lst postavljaš dgovornu osobu obrada a ovdje zoveš   obrada.getEntitet() koji nije postavljen u lstXXXValueChange
-var e = obrada.getEntitet();
+        var e = obrada.getEntitet();
 
         txtBrojOrmarica.setText(String.valueOf(e.getOrmaric()));
         cbGratis.setSelected(e.isGratis());
         cbPlaceno.setSelected(e.isPlaceno());
         cbRoditeljskaPratnja.setSelected(e.isRoditeljskaPratnja());
         dpDatum.setDateToToday();
-        lstDjeca.setModel(new IgraonicaListModel<>(e.getDjeca()));
- 
+        /*  tpVrijemeDolaska.setTime(e.getVrijemeDolaska());
+        ));
+        t lstDjeca
+        .setModel(new IgraonicaListModel<>(e.getDjeca()));
+
 //       tpVrijemeDolaska.setTime(e.getVrijemeDolaska().getTime());
+         */
     }
 
     private void definirajPostavkeTP() {
+        postaviVrijemePocetka();
+        postaviVrijemePocetka();
+
+    }
+
+    private void postaviVrijemePocetka() {
         TimePickerSettings tps = new TimePickerSettings(new Locale("hr", "HR"));
-        tps.initialTime = LocalTime.now();
         tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
         tps.setFormatForDisplayTime("HH:mm");
         tps.setFormatForMenuTimes("HH:mm");
+        tps.initialTime = LocalTime.now();
     }
 
+    private void postaviVrijemeZavrsetka() {
+        TimePickerSettings tps = new TimePickerSettings(new Locale("hr", "HR"));
+        tps.generatePotentialMenuTimes(TimePickerSettings.TimeIncrement.TenMinutes, null, null);
+        tps.setFormatForDisplayTime("HH:mm");
+        tps.setFormatForMenuTimes("HH:mm");
+        tps.initialTime = LocalTime.now();
+    }
+
+    private void popuniModel() {
+        var d = obrada.getEntitet();
+        d.setDjeca(lstDjeca.getSelectedValuesList());
+        d.setOdgovornaOsoba(lstOdgovorneOsobe.getSelectedValue());
+        d.setGratis(cbGratis.isSelected());
+        d.setOrmaric(Integer.valueOf(txtBrojOrmarica.getText().trim()));
+        d.setPlaceno(cbPlaceno.isSelected());
+        d.setRoditeljskaPratnja(cbRoditeljskaPratnja.isSelected());
+       // d.setVrijemeDolaska( tpVrijemeDolaska.get);
+      //  d.setVrijemeOdlaska(Pomocno.FORMAT_DATUMA((dpDatum.getDate("dd.MM.yyyy"))+(tpVrijemeOdlaska.getTime("HH:ss"))));
+        
+
+/*
+        DefaultListModel<Dijete> m
+                = (DefaultListModel<Dijete>) lstDjeca.getModel();
+
+        List<Dijete> novaDjeca = new ArrayList<>();
+        for (int i = 0; i < m.getSize(); i++) {
+            novaDjeca.add(m.getElementAt(i));
+        }*/
+        obrada.setEntitet(d);
+        
+    }
 }
+
+//popraviti popunimodel
+//btn dodaj

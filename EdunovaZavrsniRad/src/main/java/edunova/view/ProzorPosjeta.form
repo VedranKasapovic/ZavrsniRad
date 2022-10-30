@@ -332,11 +332,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Dodaj"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDodajActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnPromjeni">
       <Properties>
         <Property name="text" type="java.lang.String" value="Promjeni"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPromjeniActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnObri&#x161;i">
       <Properties>
