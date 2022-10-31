@@ -286,7 +286,7 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
 
     private void postavke() {
         setTitle((Pomocno.NAZIV_APLIKACIJE + " " + " Djeca"));
-        prilagodiDatePicker();
+       
 
     }
 
@@ -308,14 +308,7 @@ if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
 
     }
 
-    private void prilagodiDatePicker() {
-        DatePickerSettings dps
-                = new DatePickerSettings(new Locale("hr", "HR"));
-        dps.setFormatForDatesCommonEra(Pomocno.FORMAT_DATUMA);
-        dps.setTranslationClear("Očisti");
-        dps.setTranslationToday("Danas");
-        dpDatumRodjenja.setSettings(dps);
-    }
+    
 
     private void popuniModel() {
         var e = obrada.getEntitet();

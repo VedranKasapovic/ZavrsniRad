@@ -66,6 +66,16 @@ public class ObradaDijete extends ObradaOsoba<Dijete> {
 
     @Override
     protected void kontrolaDelete() throws EdunovaException {
+        Integer i = session.createNativeQuery(
+               "select count(*) from posjeta_dijete where djeca_sifra=:d", 
+               Integer.class).setParameter("d", entitet.getSifra()).getSingleResult();
+        if(i>0){
+           throw  new EdunovaException("Dijete se ne može obrisati jer je postavljen na jednu ili više posjeta");
+       }
+        
+        
+        
+        
         if (entitet.getOdgovorneOsobe() != null && !entitet.getOdgovorneOsobe().isEmpty()) {
             throw new EdunovaException("Dijete je dodano odgovornoj osobi");
 

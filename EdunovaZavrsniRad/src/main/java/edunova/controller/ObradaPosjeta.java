@@ -20,17 +20,13 @@ import java.util.List;
  */
 public class ObradaPosjeta extends Obrada<Posjeta> {
 
-  
-
     @Override
     public List<Posjeta> read() {
-            return session.createQuery("from Posjeta", Posjeta.class).list();
-    
+        return session.createQuery("from Posjeta", Posjeta.class).list();
+
     }
-    
-    
-    
-    public Posjeta readOne(Integer sifraPosjeta){
+
+    public Posjeta readOne(Integer sifraPosjeta) {
         return session.get(Posjeta.class, sifraPosjeta);
     }
 
@@ -39,6 +35,7 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
         kontrolaOdgovornaOsoba();
         kontrolaPlaceno();
         kontrolaBrojOrmarica();
+        kontrolaDijeteNaListi();
 
     }
 
@@ -58,8 +55,8 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
 
     @Override
     protected String getNazivEntiteta() {
-        
-      return "Posjeta";
+
+        return "Posjeta";
     }
 
     private void kontrolaOdgovornaOsoba() throws EdunovaException {
@@ -99,4 +96,10 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
 
     }
 
+    private void kontrolaDijeteNaListi() throws EdunovaException{
+if (entitet.getDjeca().isEmpty() || entitet.getDjeca() ==null) {
+            throw new EdunovaException("Obavezno dodati dijete!");
+}
+
+    }
 }

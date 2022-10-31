@@ -16,8 +16,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public class PosjetaTableModel extends AbstractTableModel {
 
-    
-    private String[] colNames = new String[] {"Djete", "Vrijeme dolaska", "Vrijeme odlaska","Plaćeno", "Roditeljska pratnja", "Gratis", "Ormarić"};
+    private String[] colNames = new String[]{"Djete", "Vrijeme dolaska", "Vrijeme odlaska", "Plaćeno", "Roditeljska pratnja", "Gratis", "Ormarić"};
+
+    public Class[] m_colTypes = {String.class, String.class, String.class, Boolean.class,
+        Boolean.class, Boolean.class, Integer.class};
 
     private List<Posjeta> posjete;
     private SimpleDateFormat df;
@@ -25,7 +27,7 @@ public class PosjetaTableModel extends AbstractTableModel {
     public PosjetaTableModel(List<Posjeta> posjete) {
         this.posjete = posjete;
         df = new SimpleDateFormat("HH:mm");
-       
+
     }
 
     @Override
@@ -75,15 +77,17 @@ public class PosjetaTableModel extends AbstractTableModel {
         }
         return "";
     }
-    
-    
-    
-@Override
-public String getColumnName(int col) {
-    return colNames[col];
-}
-    
-    public Posjeta getPosjeta(int rowIndex){
+
+    @Override
+    public String getColumnName(int col) {
+        return colNames[col];
+    }
+
+    public Class getColumnClass(int col) {
+        return m_colTypes[col];
+    }
+
+    public Posjeta getPosjeta(int rowIndex) {
         return posjete.get(rowIndex);
     }
 

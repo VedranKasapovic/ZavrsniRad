@@ -56,6 +56,7 @@ public class ObradaOdgovornaOsoba extends Obrada<OdgovornaOsoba> {
     @Override
     protected void kontrolaDelete() throws EdunovaException {
         kontrolaDeleteDjete();
+        
     }
 
     @Override
