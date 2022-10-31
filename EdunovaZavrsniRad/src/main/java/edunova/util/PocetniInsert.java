@@ -11,6 +11,7 @@ import edunova.model.OdgovornaOsoba;
 import edunova.model.Osoba;
 import edunova.model.Posjeta;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
 import org.mindrot.jbcrypt.BCrypt;
@@ -38,13 +39,13 @@ public class PocetniInsert {
         sess = HibernateUtil.getSession();
         faker = new Faker();
         sess.beginTransaction();
-        kreirajDjecu(10);
+        kreirajDjecu(20);
         kreirajOdgovorneOsobe(20);
         kreirajAdministratora();
         kreirajDjelatnika1();
         kreirajDjelatnika2();
         kreirajDjelatnika3();
-        kreirajPosjete(2);
+        kreirajPosjete(10);
         sess.getTransaction().commit();
 
     }
@@ -116,9 +117,7 @@ private void kreirajDjecu(int broj) {
         os.setEmail(faker.internet().emailAddress());
         os.setTelefon(faker.phoneNumber().cellPhone());
         os.setRod("Ostali");
-        os.getDjeca().add(djeca.get(1));
-        os.getDjeca().add(djeca.get(3));
-        os.getDjeca().add(djeca.get(6));
+        os.getDjeca().add(djeca.get(faker.number().randomDigitNotZero()));
         sess.persist(os);
         return os;
     }
@@ -134,16 +133,24 @@ private void kreirajDjecu(int broj) {
         Posjeta p = new Posjeta();
         if (i % 2 == 1) {
             p.setOdgovornaOsoba(odgovorneOsobe.get(i - 1));
+            p.getDjeca().add(p.getOdgovornaOsoba().getDjeca().get(0));
+            p.setGratis(!Boolean.TRUE);
+            p.setOrmaric(faker.number().numberBetween(1, 50));
+            p.setPlaceno(Boolean.TRUE);
+            p.setRoditeljskaPratnja(!Boolean.TRUE);
+            p.setVrijemeDolaska(new Date());
+            p.setVrijemeOdlaska(new Date());
         } else {
             p.setOdgovornaOsoba(odgovorneOsobe.get(i));
+            p.getDjeca().add(p.getOdgovornaOsoba().getDjeca().get(0));
+            p.setGratis(Boolean.TRUE);
+            p.setOrmaric(faker.number().numberBetween(1, 50));
+            p.setPlaceno(!Boolean.TRUE);
+            p.setRoditeljskaPratnja(Boolean.TRUE);
+            p.setVrijemeDolaska(new Date());
+         
         }
-        p.setOrmaric(i);
-            
-            
-            
-       
-        
-        
+          
 
         sess.persist(p);
 

@@ -539,9 +539,7 @@ public class ProzorPosjeta extends javax.swing.JFrame {
         d.setPlaceno(cbPlaceno.isSelected());
         d.setRoditeljskaPratnja(cbRoditeljskaPratnja.isSelected());
        
-        
-        //https://github.com/IvanStanic84/Ribolov-Aplikacija/blob/main/src/main/java/edunova/view/ProzorNatjecanje.java#L167
-        
+                
         if (dpDatum.getDate() != null && tpVrijemeDolaska.getTime()!=null) {
             LocalDateTime ldt = LocalDateTime.of(dpDatum.getDate(),
                     tpVrijemeDolaska.getTime());

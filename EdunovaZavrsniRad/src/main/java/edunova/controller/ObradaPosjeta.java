@@ -47,9 +47,7 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
 
     @Override
     protected void kontrolaDelete() throws EdunovaException {
-        if (null != entitet.getOdgovornaOsoba()) {
-            throw new EdunovaException("Ne može se obrisati posjeta koja ima odgovornu osobu");
-        }
+       
 
     }
 
@@ -86,6 +84,13 @@ public class ObradaPosjeta extends Obrada<Posjeta> {
     }
 
     private void kontrolaBrojOrmarica() throws EdunovaException {
+        if (!entitet.getOrmaric().toString().matches("[0-9]+") && entitet.getOrmaric() != null) {
+            try {
+                
+            } catch (Exception e) {
+            }
+ throw new EdunovaException("Upisati samo brojčanu vrijednost ormarića!");
+        }
         if (entitet.getOrmaric() != null
                 && entitet.getOrmaric() > 0) {
             if (entitet.getOrmaric() > 50) {
